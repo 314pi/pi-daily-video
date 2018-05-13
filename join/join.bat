@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -f concat -i mylist.txt -c copy "..\join.ts"
