@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy -vvv filegoc.ts  --rate=2.00 --sout="#transcode{vcodec=h264, acodec=adts}:std{access=file, mux=ts, dst=rate2.ts}" vlc://quit

@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -i filegoc.ts -vcodec copy -acodec copy -ss 00:00:00 -to 00:59:59 split.ts
+"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -i filegoc.ts -vcodec copy -acodec copy -ss 00:00:00 -t 00:59:59 split.ts
