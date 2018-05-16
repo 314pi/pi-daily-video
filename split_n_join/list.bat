@@ -1,0 +1,1 @@
+(for %%i in (part?.ts) do @echo file '%%i') > mylist.txt

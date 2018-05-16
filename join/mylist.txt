@@ -1,3 +1,0 @@
-file 'split1.ts'
-file 'split2.ts'
-file 'split3.ts'
