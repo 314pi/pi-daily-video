@@ -1,3 +1,6 @@
-set filename=%date:~0,2%%date:~3,2%%date:~6,4%-%time:~0,2%%time:~3,2%%time:~6,2%
+set filename=vtv1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename%.ts --network-caching=60000 --run-time 5400 --play-and-exit
 
-start "vtv1" streamlink --player "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe --sout=file/ts:%filename%.ts --run-time 5400" http://vtvgo-live-appobj.b5695cde.cdnviet.com/9a126474a4bf19dd7017363518d9d21f1526410764/live/_definst_/vtv1-mid.m3u8 worst --hls-segment-threads 3
+set vtv1=http://talk2.vcdn.vn/hls/9068ed7d7c3a6661a8e31fbfd4498ea5/1636896d974/thoixungan/index.m3u8
+
+start "vtv1" streamlink --player "%vlc%" %vtv1% worst --hls-segment-threads 3
