@@ -1,1 +1,2 @@
 http://antv.xemtvhd.com:1935/live/_definst_/VTV1_H_5374560ab1atyu33dfee617ce3516ca502d/chunklist_w181079282.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/4df066d5ce6fffbbc47e07d233e8ba871526573073/live/_definst_/vtv1-mid.m3u8

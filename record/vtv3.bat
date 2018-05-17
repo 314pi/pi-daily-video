@@ -1,11 +1,10 @@
 @echo off
 setlocal enableextensions disabledelayedexpansion
 
+:start_record
 set filename=vtv3_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
 set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 5400 --play-and-exit
-
-:start_record
 set /p vtv3=< vtv3.txt
 tasklist /fi "WindowTitle eq pi-vtv3" | find /i "streamlink.exe" || (
 streamlink %vtv3% | find /i "Available streams" || (
