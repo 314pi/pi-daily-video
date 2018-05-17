@@ -13,6 +13,7 @@ echo Kiem Tra Lai Link !
 rundll32 user32.dll,MessageBeep
 timeout /t 3
 )
+goto start_record
 )
 start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads 3
 )
