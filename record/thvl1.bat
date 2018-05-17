@@ -1,11 +1,4 @@
-set hour=%time:~0,2%
-if "%hour:~0,1%" == " " set hour=0%hour:~1,1%
-set min=%time:~3,2%
-if "%min:~0,1%" == " " set min=0%min:~1,1%
-set secs=%time:~6,2%
-if "%secs:~0,1%" == " " set secs=0%secs:~1,1%
-
-set filename=thvl1_%date:~0,2%%date:~3,2%_%hour%%min%%secs%.ts
+set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
 set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
 
