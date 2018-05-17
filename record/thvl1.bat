@@ -5,12 +5,9 @@ set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
 set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
 
-set thvl1=http://talk2.vcdn.vn/hls/cc9249254ad58a94b6ad1734795192b2/1636c290824/thoixungan/index.m3u8
-
 :start_record
-
+set /p thvl1=< thvl1.txt
 tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
-:: check if url is ready.
 streamlink %thvl1% | find /i "Available streams" || (
 :beep
 echo Kiem Tra Lai Link !
