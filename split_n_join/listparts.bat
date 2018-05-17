@@ -1,1 +1,1 @@
-(for %%i in (part?.ts) do @echo file '%%i') > mylist.txt
+(for %%i in (part?.ts) do @echo file '%%i') > parts.txt
