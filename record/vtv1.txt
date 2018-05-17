@@ -1,1 +1,1 @@
-http://antv.xemtvhd.com:1935/live/_definst_/VTV1_H_5374560ab1atyu33dfee617ce3516ca502d/chunklist_w181079282.m3u8?token=yEvcZuGlu6rHSB0Ky8rX72cD7MhdyIhylCHXc6ajDq3xGjHPqbDaw3F8hnFzbKXeAjtWYZw6VD8WcEbCAZPW64nv4SWn4aKxEowf7glxdYtIF0K577vofdB0M81zVwSZyq9gzSIx551
+http://antv.xemtvhd.com:1935/live/_definst_/VTV1_H_5374560ab1atyu33dfee617ce3516ca502d/chunklist_w181079282.m3u8

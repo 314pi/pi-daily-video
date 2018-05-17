@@ -9,11 +9,11 @@ set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%fil
 set /p vtv1=< vtv1.txt
 tasklist /fi "WindowTitle eq pi-vtv1" | find /i "streamlink.exe" || (
 streamlink %vtv1% | find /i "Available streams" || (
-:beep
+for /l %%x in (1,1,10) do (
 echo Kiem Tra Lai Link !
 rundll32 user32.dll,MessageBeep
 @timeout /t 3
-goto beep
+)
 )
 start "pi-vtv1" streamlink --player "%vlc%" %vtv1% worst --hls-segment-threads 3
 )

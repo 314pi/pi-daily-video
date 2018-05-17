@@ -9,21 +9,18 @@ set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%fil
 set /p thvl1=< thvl1.txt
 tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
 streamlink %thvl1% | find /i "Available streams" || (
-:beep
+for /l %%x in (1,1,10) do (
 echo Kiem Tra Lai Link !
 rundll32 user32.dll,MessageBeep
 @timeout /t 3
-goto beep
+)
 )
 start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads 3
 )
-
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "13:05:00,00" ( goto :eof )
-
 goto start_record
-
 :: getTime
 ::    This routine returns the current (or passed as argument) time
 ::    in the form hh:mm:ss,cc in 24h format, with two digits in each
