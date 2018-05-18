@@ -1,0 +1,2 @@
+http://talk2.vcdn.vn/hls/165a21f001e256d31558b0411e38998d/16372610e0f/thoixungan/index.m3u8
+http://talk2.vcdn.vn/hls/539d2c2ac4dd706ff34c9d30086d31ad/163725ab9a6/thoixungan/index.m3u8

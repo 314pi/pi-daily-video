@@ -4,26 +4,33 @@ setlocal enableextensions disabledelayedexpansion
 :start_record
 set filename=vtv3_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
-set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 5400 --play-and-exit
-set /p vtv3=< vtv3.txt
+set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
+if not exist vtv3.txt (
+:link_error
+    for /l %%x in (1,1,3) do (
+		echo ERROR___[thvl1.txt]___[%%x]/[3]
+		"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+	)
+	goto start_record
+)
+for %%a in (vtv3.txt) do set fsize=%%~za
+if %fsize% equ 0 (
+	goto link_error
+)
+set /p vtv3=<vtv3.txt
 tasklist /fi "WindowTitle eq pi-vtv3" | find /i "streamlink.exe" || (
-streamlink %vtv3% | find /i "Available streams" || (
-for /l %%x in (1,1,10) do (
-echo Kiem Tra Lai Link !
-rundll32 user32.dll,MessageBeep
-timeout /t 3
+	streamlink %vtv3% | find /i "Available streams" || (
+		more +1 <vtv3.txt >vtv3.tem
+		del vtv3.txt
+		ren vtv3.tem vtv3.txt
+		goto start_record
+	)
+	start "pi-vtv3" streamlink --player "%vlc%" %vtv3% worst --hls-segment-threads 3
 )
-goto start_record
-)
-start "pi-vtv3" streamlink --player "%vlc%" %vtv3% worst --hls-segment-threads 3
-)
-
 timeout /t 10 /nobreak
 call :getTime now
-if "%now%" geq "23:50:00,00" ( goto :eof )
-
+if "%now%" geq "23:00:00,00" ( goto :eof )
 goto start_record
-
 :: getTime
 ::    This routine returns the current (or passed as argument) time
 ::    in the form hh:mm:ss,cc in 24h format, with two digits in each

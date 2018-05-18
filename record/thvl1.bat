@@ -7,10 +7,9 @@ set filename=%filename: =%
 set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
 if not exist thvl1.txt (
 :link_error
-    for /l %%x in (1,1,10) do (
-		echo ERROR___[thvl1.txt]___[%%x]/[10]
-		rundll32 user32.dll,MessageBeep
-		timeout /t 3
+    for /l %%x in (1,1,3) do (
+		echo ERROR___[thvl1.txt]___[%%x]/[3]
+		"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
 	)
 	goto start_record
 )
