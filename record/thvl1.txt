@@ -1,5 +1,0 @@
-http://talk2.vcdn.vn/hls/39609f64ce7ab1494f5c6c5182f4a29c/16370f6f2a4/thoixungan/index.m3u8
-http://talk2.vcdn.vn/hls/7b012f8b5bcb1b5c819f1e3908b419b1/1637161c705/thoixungan/index.m3u8
-http://talk2.vcdn.vn/hls/f796932877dd921eaf06accc717a4112/163715ba456/thoixungan/index.m3u8
-http://27.67.64.69:18080//133_2.m3u8?AdaptiveType=HLS&SessionID=e1ed890a-e846-4b2c-828d-9a13239c7367
-http://27.67.64.73:18080//133_2.m3u8?AdaptiveType=HLS&SessionID=550d5fb0-003a-4019-8623-53b52b0cfefc

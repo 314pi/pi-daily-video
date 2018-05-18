@@ -6,21 +6,21 @@ set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
 set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
 if not exist thvl1.txt (
+:link_error
     for /l %%x in (1,1,10) do (
-		echo Khong Tim Thay File THVL1.TXT [%%x] !
+		echo ERROR___[thvl1.txt]___[%%x]/[10]
 		rundll32 user32.dll,MessageBeep
 		timeout /t 3
 	)
 	goto start_record
 )
+for %%a in (thvl1.txt) do set fsize=%%~za
+if %fsize% equ 0 (
+	goto link_error
+)
 set /p thvl1=<thvl1.txt
 tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
 	streamlink %thvl1% | find /i "Available streams" || (
-		for /l %%x in (1,1,10) do (
-			echo Kiem Tra Lai Link [%%x] !
-			rundll32 user32.dll,MessageBeep
-			timeout /t 3
-		)
 		more +1 <thvl1.txt >thvl1.tem
 		del thvl1.txt
 		ren thvl1.tem thvl1.txt
