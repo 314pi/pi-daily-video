@@ -5,17 +5,28 @@ setlocal enableextensions disabledelayedexpansion
 set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
 set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
-set /p thvl1=< thvl1.txt
+if not exist thvl1.txt (
+    for /l %%x in (1,1,10) do (
+		echo Khong Tim Thay File THVL1.TXT [%%x] !
+		rundll32 user32.dll,MessageBeep
+		timeout /t 3
+	)
+	goto start_record
+)
+set /p thvl1=<thvl1.txt
 tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
-streamlink %thvl1% | find /i "Available streams" || (
-for /l %%x in (1,1,10) do (
-echo Kiem Tra Lai Link !
-rundll32 user32.dll,MessageBeep
-timeout /t 3
-)
-goto start_record
-)
-start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads 3
+	streamlink %thvl1% | find /i "Available streams" || (
+		for /l %%x in (1,1,10) do (
+			echo Kiem Tra Lai Link [%%x] !
+			rundll32 user32.dll,MessageBeep
+			timeout /t 3
+		)
+		more +1 <thvl1.txt >thvl1.tem
+		del thvl1.txt
+		ren thvl1.tem thvl1.txt
+		goto start_record
+	)
+	start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads 3
 )
 timeout /t 10 /nobreak
 call :getTime now

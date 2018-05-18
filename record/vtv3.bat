@@ -20,7 +20,7 @@ start "pi-vtv3" streamlink --player "%vlc%" %vtv3% worst --hls-segment-threads 3
 
 timeout /t 10 /nobreak
 call :getTime now
-if "%now%" geq "22:50:00,00" ( goto :eof )
+if "%now%" geq "23:50:00,00" ( goto :eof )
 
 goto start_record
 
