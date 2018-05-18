@@ -15,8 +15,7 @@ if not exist vtv1.txt (
 )
 for %%a in (vtv1.txt) do set fsize=%%~za
 if %fsize% equ 0 (
-	goto link_error
-)
+	goto link_error )
 set /p vtv1=<vtv1.txt
 tasklist /fi "WindowTitle eq pi-vtv1" | find /i "streamlink.exe" || (
 	streamlink %vtv1% | find /i "Available streams" || (
@@ -29,7 +28,10 @@ tasklist /fi "WindowTitle eq pi-vtv1" | find /i "streamlink.exe" || (
 )
 timeout /t 10 /nobreak
 call :getTime now
-if "%now%" geq "21:45:00,00" ( goto :eof )
+if "%now%" geq "21:45:00,00" (
+	echo [ KET THUC GHI ]
+	"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+	goto :eof )
 goto start_record
 :: getTime
 ::    This routine returns the current (or passed as argument) time
