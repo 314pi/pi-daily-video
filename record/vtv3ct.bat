@@ -1,15 +1,19 @@
 @echo off
-setlocal enableextensions disabledelayedexpansion
+set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
+set hetgio=14:50:00,00
+set canhbao="%vlcpath%" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+set batdau="%vlcpath%" -I dummy batdau.mp3  --play-and-exit --volume 1024
+set ketthuc="%vlcpath%" -I dummy ketthuc.mp3  --play-and-exit --volume 1024
 
 :start_record
 set filename=vtv3ct_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
-set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
+set vlc=%vlcpath% -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
 if not exist vtv3ct.txt (
 :link_error
     for /l %%x in (1,1,3) do (
 		echo ERROR___[vtv3ct.txt]___[%%x]/[3]
-		"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+		%canhbao%
 	)
 	goto start_record
 )
@@ -18,19 +22,20 @@ if %fsize% equ 0 (
 	goto link_error )
 set /p vtv3ct=<vtv3ct.txt
 tasklist /fi "WindowTitle eq pi-vtv3ct" | find /i "streamlink.exe" || (
-	streamlink %vtv3ct% | find /i "Available streams" || (
+	streamlink "%vtv3ct%" | find /i "Available streams" || (
 		more +1 <vtv3ct.txt >vtv3ct.tem
 		del vtv3ct.txt
 		ren vtv3ct.tem vtv3ct.txt
 		goto start_record
 	)
-	start "pi-vtv3ct" streamlink --player "%vlc%" %vtv3ct% worst --hls-segment-threads 3
+	start "pi-vtv3ct" streamlink --player "%vlc%" "%vtv3ct%" worst --hls-segment-threads 3
+	%batdau%
 )
 timeout /t 10 /nobreak
 call :getTime now
-if "%now%" geq "15:00:00,00" ( 
+if "%now%" geq "%hetgio%" (
 	echo [ KET THUC GHI ]
-	"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+	%ketthuc%
 	goto :eof )
 goto start_record
 :: getTime

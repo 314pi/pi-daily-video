@@ -1,3 +1,6 @@
+http://talk2.vcdn.vn/hls/d1bf0644c533ed0f2639cc9d902e032a/16376b37e0b/thoixungan/index.m3u8
+http://talk2.vcdn.vn/hls/743a6bc88bc2f241a757a5a0d4167520/16376b1f40c/thoixungan/index.m3u8
+http://talk2.vcdn.vn/hls/a5001e6ee9f88f2e06d3f53df4ed9dff/16376b40edc/thoixungan/index.m3u8
 http://talk2.vcdn.vn/hls/591b7e1be8d56621fb5ee77acc9f3562/163766b1a3d/thoixungan/index.m3u8
 http://talk2.vcdn.vn/hls/ae33e6c97e11537cf2da569f02e0ab1b/163766bbda8/thoixungan/index.m3u8
 http://talk2.vcdn.vn/hls/ae3d76bbd09a27a90b4f8c42ae736842/16376657e73/thoixungan/index.m3u8

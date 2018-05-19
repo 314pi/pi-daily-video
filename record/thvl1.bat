@@ -1,6 +1,6 @@
 @echo off
 set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
-set hetgio=10:05:00,00
+set hetgio=13:00:00,00
 set nhac="%vlcpath%" -I dummy canhbao.mp3  --play-and-exit --volume 1024
 
 :start_record
@@ -27,6 +27,7 @@ tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
 		goto start_record
 	)
 	start "pi-thvl1" streamlink --player "%vlc%" "%thvl1%" worst --hls-segment-threads 3
+	%nhac%
 )
 timeout /t 10 /nobreak
 call :getTime now
