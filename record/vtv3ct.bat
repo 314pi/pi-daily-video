@@ -1,38 +1,36 @@
 @echo off
-set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
-set hetgio=10:05:00,00
-set nhac="%vlcpath%" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+setlocal enableextensions disabledelayedexpansion
 
 :start_record
-set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
+set filename=vtv3ct_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
-set vlc=%vlcpath% -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
-if not exist thvl1.txt (
+set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
+if not exist vtv3ct.txt (
 :link_error
     for /l %%x in (1,1,3) do (
-		echo ERROR___[thvl1.txt]___[%%x]/[3]
-		%nhac%
+		echo ERROR___[vtv3ct.txt]___[%%x]/[3]
+		"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
 	)
 	goto start_record
 )
-for %%a in (thvl1.txt) do set fsize=%%~za
+for %%a in (vtv3ct.txt) do set fsize=%%~za
 if %fsize% equ 0 (
 	goto link_error )
-set /p thvl1=<thvl1.txt
-tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
-	streamlink "%thvl1%" | find /i "Available streams" || (
-		more +1 <thvl1.txt >thvl1.tem
-		del thvl1.txt
-		ren thvl1.tem thvl1.txt
+set /p vtv3ct=<vtv3ct.txt
+tasklist /fi "WindowTitle eq pi-vtv3ct" | find /i "streamlink.exe" || (
+	streamlink %vtv3ct% | find /i "Available streams" || (
+		more +1 <vtv3ct.txt >vtv3ct.tem
+		del vtv3ct.txt
+		ren vtv3ct.tem vtv3ct.txt
 		goto start_record
 	)
-	start "pi-thvl1" streamlink --player "%vlc%" "%thvl1%" worst --hls-segment-threads 3
+	start "pi-vtv3ct" streamlink --player "%vlc%" %vtv3ct% worst --hls-segment-threads 3
 )
 timeout /t 10 /nobreak
 call :getTime now
-if "%now%" geq "%hetgio%" (
+if "%now%" geq "15:00:00,00" ( 
 	echo [ KET THUC GHI ]
-	%nhac%
+	"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
 	goto :eof )
 goto start_record
 :: getTime

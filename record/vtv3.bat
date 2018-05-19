@@ -8,15 +8,14 @@ set vlc=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --sout=file/ts:%fil
 if not exist vtv3.txt (
 :link_error
     for /l %%x in (1,1,3) do (
-		echo ERROR___[thvl1.txt]___[%%x]/[3]
+		echo ERROR___[vtv3.txt]___[%%x]/[3]
 		"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
 	)
 	goto start_record
 )
 for %%a in (vtv3.txt) do set fsize=%%~za
 if %fsize% equ 0 (
-	goto link_error
-)
+	goto link_error )
 set /p vtv3=<vtv3.txt
 tasklist /fi "WindowTitle eq pi-vtv3" | find /i "streamlink.exe" || (
 	streamlink %vtv3% | find /i "Available streams" || (
@@ -29,7 +28,10 @@ tasklist /fi "WindowTitle eq pi-vtv3" | find /i "streamlink.exe" || (
 )
 timeout /t 10 /nobreak
 call :getTime now
-if "%now%" geq "23:00:00,00" ( goto :eof )
+if "%now%" geq "23:00:00,00" ( 
+	echo [ KET THUC GHI ]
+	"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+	goto :eof )
 goto start_record
 :: getTime
 ::    This routine returns the current (or passed as argument) time
