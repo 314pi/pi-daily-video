@@ -2,11 +2,15 @@
 set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
 set hetgio=13:00:00,00
 set nhac="%vlcpath%" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
+set pothers=-I dummy --network-caching=60000 --run-time 4200 --play-and-exit
 
 :start_record
 set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 
-set vlc=%vlcpath% -I dummy --sout=file/ts:%filename% --network-caching=60000 --run-time 4200 --play-and-exit
+set psout=--sout=file/ts:%filename%
+:: set psout=--sout=#transcode{vcodec=h264,sfilter=logo}:std{access=file,dst=%filename%}} use with %plogo%
+set set vlc=%vlcpath% %pothers% %psout%
 if not exist thvl1.txt (
 :link_error
     for /l %%x in (1,1,3) do (

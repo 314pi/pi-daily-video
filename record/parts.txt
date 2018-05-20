@@ -1,3 +1,2 @@
 file 'part1.ts'
 file 'part2.ts'
-file 'part3.ts'
