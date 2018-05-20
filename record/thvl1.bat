@@ -1,21 +1,29 @@
 @echo off
+:: THIET LAP THONG SO CO DINH
+set hetgio=15:20:00,00
+set pruntime=--run-time 4200
+::==================================================================================
 set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
-set hetgio=13:00:00,00
-set nhac="%vlcpath%" -I dummy canhbao.mp3  --play-and-exit --volume 1024
+set voice_opt=-I dummy --play-and-exit --volume 1024
+set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
+set batdau="%vlcpath%" %voice_opt% batdau.mp3
+set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
 set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
-set pothers=-I dummy --network-caching=60000 --run-time 4200 --play-and-exit
+set ptext=Pilikeyou Thanks For Share Like Follow (Upload By Pilikeyou)
+set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
+::==================================================================================
 
 :start_record
 set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
-set filename=%filename: =% 
+set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
-:: set psout=--sout=#transcode{vcodec=h264,sfilter=logo}:std{access=file,dst=%filename%}} use with %plogo%
-set set vlc=%vlcpath% %pothers% %psout%
+::set psout=--sout=#transcode{vcodec=h264,sfilter=logo}:std{access=file,dst=%filename%}}
+set vlc=%vlcpath% %pothers% %psout%
 if not exist thvl1.txt (
 :link_error
     for /l %%x in (1,1,3) do (
 		echo ERROR___[thvl1.txt]___[%%x]/[3]
-		%nhac%
+		%canhbao%
 	)
 	goto start_record
 )
@@ -31,13 +39,13 @@ tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
 		goto start_record
 	)
 	start "pi-thvl1" streamlink --player "%vlc%" "%thvl1%" worst --hls-segment-threads 3
-	%nhac%
+	%batdau%
 )
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
 	echo [ KET THUC GHI ]
-	%nhac%
+	%ketthuc%
 	goto :eof )
 goto start_record
 :: getTime
