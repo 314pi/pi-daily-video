@@ -110,3 +110,4 @@ Example command line '''(All versions including VLC 0.8.6d and prior)''':
 -sout=#transcode{acodec=mp3}:duplicate{dst=display{delay=6000},
 dst=gather:std{mux=mpeg1,dst=:8080/stream.mp3,access=http},select="novideo"} 
 
+ start "pi-vtv1" streamlink --player "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe -I dummy --network-caching=60000 --play-and-exit --run-time 4200 --sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size=15 --marq-y=15 --sout=#transcode{vcodec=h264, scale=1, sfilter=logo, sfilter=marq}:std{access=file, dst=vtv1_2105_183234.ts}" http://vtvgo-live-appobj.b5695cde.cdnviet.com/ba5e10b633a92d2151e53a59b5562f1a1526912367/live/_definst_/vtv1-mid.m3u8 worst --hls-segment-threads 3

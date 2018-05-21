@@ -3,13 +3,16 @@
 set hetgio=13:00:00,00
 set pruntime=--run-time 4200
 ::==================================================================================
-set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
+set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
+if not exist "%vlcpath%" set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
+if not exist "%vlcpath%" set /p vlcpath=Enter VLC path: 
 set voice_opt=-I dummy --play-and-exit --volume 1024
 set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
 set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
-set ptext=--sub-filter=marq --marq-file=marq.txt --marq-position=6 --marq-size=15 --marq-y=15
+set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=4 --marq-size=15 --marq-y=15
+set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
 set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
 
@@ -18,7 +21,7 @@ set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
 ::set psout=--sout=file/ts:%filename%
 set psout=--sout=#transcode{vcodec=h264,sfilter=logo,sfilter=marq}:std{access=file,dst=%filename%}
-set vlc=%vlcpath% %pothers% %ptext% %psout%
+set vlc=%vlcpath% %pothers% %ptext1% %psout%
 if not exist thvl1.txt (
 :link_error
     for /l %%x in (1,1,3) do (
