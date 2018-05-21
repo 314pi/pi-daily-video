@@ -1,6 +1,6 @@
 set pcopy=-vcodec copy -acodec copy
-set part1=%pcopy% -ss 00:00:00 -to 00:39:27 part1.ts
-set part2=%pcopy% -ss 00:44:32 -to 00:57:45 part2.ts
-set part3=%pcopy% -ss 00:59:26 -to 00:59:59 part3.ts
+set part1=%pcopy% -ss 00:03:28 -to 00:16:44 part1.ts 
+set part2=%pcopy% -ss 00:23:44 -to 00:35:16 part2.ts
+set part3=%pcopy% -ss 00:41:01 -to 00:55:18 part3.ts
 
-"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -i split.ts %part1% %part2% %part3%
+"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -probesize 10M  -analyzeduration 10M -i split.ts %part1% %part2% %part3%

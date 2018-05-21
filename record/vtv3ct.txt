@@ -1,1 +1,1 @@
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/dffac5ee41f78bdcd254626c3aa009aa1526822520/live/_definst_/vtv3-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/1f6b7ca8e3b176c7abcb0643b6d7d9fc1526839334/live/_definst_/vtv3-high.m3u8

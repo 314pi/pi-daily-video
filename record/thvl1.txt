@@ -1,0 +1,3 @@
+http://talk2.vcdn.vn/hls/502f2d9922781ed91aa27d84c971f04d/16380d099c2/vtvmch/index.m3u8
+http://talk2.vcdn.vn/hls/9100dd9bd65484d2d79bbf91e8985eb2/16380d6e61c/vtvmch/index.m3u8
+http://talk2.vcdn.vn/hls/f0cb32f2001758314a8127ff33629e04/16380fdf307/vtvmch/index.m3u8

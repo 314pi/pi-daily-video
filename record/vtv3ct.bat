@@ -8,8 +8,8 @@ set voice_opt=-I dummy --play-and-exit --volume 1024
 set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
-::set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164 NOT NEED BECAUSE YOU CAN CHOOSE IN VLC GUI
-::set ptext=Pilikeyou Thanks For Share Like Follow (Upload By Pilikeyou)
+set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
+set ptext=Ghi và upload tự động bởi Pilikeyou. Thanks for Share Like Follow
 set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
 
