@@ -1,0 +1,2 @@
+TAG:lavfi.black_start=7.63866
+TAG:lavfi.black_end=10.9587

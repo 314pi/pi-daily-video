@@ -1,3 +1,35 @@
+^(.*?)$\s+?^(?=.*^\1$) 
+
+
+
+Since Notepad++ Version 6 you can use this regex in the search and replace dialogue:
+
+^(.*?)$\s+?^(?=.*^\1$)
+
+and replace with nothing. This leaves from all duplicate rows the last occurrence in the file.
+
+No sorting is needed for that and the duplicate rows can be anywhere in the file!
+
+You need to check the options "Regular expression" and ". matches newline":
+
+Notepad++ Replace dialogue
+
+    ^ matches the start of the line.
+
+    (.*?) matches any characters 0 or more times, but as few as possible (It matches exactly on row, this is needed because of the ". matches newline" option). The matched row is stored, because of the brackets around and accessible using \1
+
+    $ matches the end of the line.
+
+    \s+?^ this part matches all whitespace characters (newlines!) till the start of the next row ==> This removes the newlines after the matchd row, so that no empty row is there after the replacement.
+
+    (?=.*^\1$) this is a positive lookahead assertion. This is the important part in this regex, a row is only matched (and removed), when there is exactly the same row following somewhere else in the file.
+
+
+	
+
+/Incoming/VLC.app/Contents/MacOS/VLC -I dummy ~/Dropbox/Public/VLC/Original.dv --sout='#duplicate{dst="transcode{vcodec=h264,venc=x264{profile=main,level=3},vb=800,scale=1,acodec=mp4a,ab=128,channels=2,samplerate=32000}:standard{access=file,mux=mp4,dst=/tmp/test.mp4}",dst="transcode{vcodec=theora,vb=800,scale=1,acodec=vorb,ab=128,channels=2,samplerate=32000}:standard{access=file,mux=ogg,dst=/tmp/test.ogg}"}' vlc://quit
+
+
 set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
 set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =% 

@@ -11,7 +11,7 @@ set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
 set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
-set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=4 --marq-size=15 --marq-y=15
+set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size=15 --marq-y=15 --marq-color=16776960 
 set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
 set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
@@ -20,12 +20,13 @@ set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
 ::set psout=--sout=file/ts:%filename%
-set psout=--sout=#transcode{vcodec=h264,sfilter=logo,sfilter=marq}:std{access=file,dst=%filename%}
+set psout=--sout=#transcode{vcodec=h264,vb=1024,sfilter=logo,sfilter=marq}:std{access=file,mux=ts,dst=%filename%}
 set vlc=%vlcpath% %pothers% %ptext1% %psout%
 if not exist thvl1.txt (
 :link_error
-    for /l %%x in (1,1,3) do (
-		echo ERROR___[thvl1.txt]___[%%x]/[3]
+    for /l %%x in (1,1,10) do (
+		cls
+		echo ERROR___[thvl1.txt]___[%%x]/[10]
 		%canhbao%
 	)
 	goto start_record
@@ -41,12 +42,15 @@ tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
 		ren thvl1.tem thvl1.txt
 		goto start_record
 	)
-	start "pi-thvl1" streamlink --player "%vlc%" "%thvl1%" worst --hls-segment-threads 3
 	%batdau%
+	start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads 3
 )
+cls
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
+:: Ask for if one want to see stream before quit
+	streamlink --player "%vlcpath%" %thvl1% worst
 	echo [ KET THUC GHI ]
 	%ketthuc%
 	goto :eof )
