@@ -1,2 +1,0 @@
-file 'part1.ts'
-file 'part2.ts'

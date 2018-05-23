@@ -6,7 +6,7 @@ set pcopy=-vcodec copy -acodec copy
 set p_file=autosplit.ts
 
 echo %time%
-"%p_ffprobe%" -f lavfi -i "movie=%p_file%,blackdetect[out0]" -show_entries tags=lavfi.black_start,lavfi.black_end -of default=nw=1 -v quiet | find /i "tag" >autosplit.txt
+::"%p_ffprobe%" -f lavfi -i "movie=%p_file%,blackdetect[out0]" -show_entries tags=lavfi.black_start,lavfi.black_end -of default=nw=1 -v quiet | find /i "tag" >autosplit.txt
 echo %time%
 :: remove duplicate lines
 if exist "temp.txt" del temp.txt
@@ -21,7 +21,11 @@ set /a p_part=1
 for /f "tokens=1,2 delims==" %%L in (autosplit.txt) do (
 	echo %%L | findstr /i "start" && ( 
 		set p_end=%%M
-		set p_split=!pcopy! -ss !p_start! -to !p_end! part!p_part!.ts 
+		if !p_part! leq 9 ( 
+			set p_split=!pcopy! -ss !p_start! -to !p_end! part0!p_part!.ts 
+		) else (
+			set p_split=!pcopy! -ss !p_start! -to !p_end! part!p_part!.ts 
+		)
 		"%p_ffmpeg%" -i !p_file! !p_split!
 		set /a p_part+=1
 	)

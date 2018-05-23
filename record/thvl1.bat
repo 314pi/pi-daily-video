@@ -1,6 +1,6 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=13:00:00,00
+set hetgio=12:50:00,00
 set pruntime=--run-time 4200
 ::==================================================================================
 set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
@@ -19,9 +19,9 @@ set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 :start_record
 set filename=thvl1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
-::set psout=--sout=file/ts:%filename%
-set psout=--sout=#transcode{vcodec=h264,vb=1024,sfilter=logo,sfilter=marq}:std{access=file,mux=ts,dst=%filename%}
-set vlc=%vlcpath% %pothers% %ptext1% %psout%
+set psout=--sout=file/ts:%filename%
+::set psout=--sout=#transcode{vcodec=h264,vb=1024,sfilter=logo,sfilter=marq}:std{access=file,mux=ts,dst=%filename%}
+set vlc=%vlcpath% %pothers% %psout%
 if not exist thvl1.txt (
 :link_error
     for /l %%x in (1,1,10) do (
