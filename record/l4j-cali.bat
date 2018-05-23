@@ -1,0 +1,1 @@
+(for %%i in (cali_part*.ts) do @echo file '%%i') > p4j.txt

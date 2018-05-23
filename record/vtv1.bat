@@ -1,6 +1,6 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=22:00:00,00
+set hetgio=21:40:00,00
 set pruntime=--run-time 4200
 ::==================================================================================
 set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe

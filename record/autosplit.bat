@@ -6,7 +6,7 @@ set pcopy=-vcodec copy -acodec copy
 set p_file=autosplit.ts
 
 echo %time%
-::"%p_ffprobe%" -f lavfi -i "movie=%p_file%,blackdetect[out0]" -show_entries tags=lavfi.black_start,lavfi.black_end -of default=nw=1 -v quiet | find /i "tag" >autosplit.txt
+"%p_ffprobe%" -f lavfi -i "movie=%p_file%,blackdetect[out0]" -show_entries tags=lavfi.black_start,lavfi.black_end -of default=nw=1 -v quiet | find /i "tag" >autosplit.txt
 echo %time%
 :: remove duplicate lines
 if exist "temp.txt" del temp.txt

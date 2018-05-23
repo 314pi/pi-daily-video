@@ -1,5 +1,3 @@
-file 'part04.ts'
-file 'part09.ts'
-file 'part14.ts'
-file 'part16.ts'
-file 'part17.ts'
+part1.ts,0,00:12:50
+part2.ts,00:17:12,00:32:23
+part3.ts,00:35:56,end

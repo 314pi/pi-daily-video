@@ -1,4 +1,0 @@
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/e04563d4040607b3fa9de6360d75748c1527011810/live/_definst_/vtv3-mid.m3u8
-http://talk2.vcdn.vn/hls/b13de431dc9653017e7632b8a333e038/16387ffac9b/khonghenhme/index.m3u8
-http://talk2.vcdn.vn/hls/02a1238d5b6928351ddc5a58d56a3cf0/16388002172/khonghenhme/index.m3u8
-http://talk2.vcdn.vn/hls/9bb36c0c64efb73922c8dda34b0b8d85/1638814a654/khonghenhme/index.m3u8

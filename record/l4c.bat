@@ -1,1 +1,1 @@
-(for %%i in (part*.ts) do @echo file '%%i') > p4c.txt
+(for %%i in (part*.ts) do @echo %%i,,) > p4c.txt
