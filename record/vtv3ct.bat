@@ -1,15 +1,18 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=15:20:00,00
+set hetgio=15:00:00,00
 set pruntime=--run-time 4200
 ::==================================================================================
-set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
+set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
+if not exist "%vlcpath%" set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
+if not exist "%vlcpath%" set /p vlcpath=Enter VLC path: 
 set voice_opt=-I dummy --play-and-exit --volume 1024
 set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
 set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
-set ptext=Ghi và upload tự động bởi Pilikeyou. Thanks for Share Like Follow
+set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=4 --marq-size=15 --marq-y=1 
+set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
 set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
 
@@ -17,12 +20,13 @@ set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 set filename=vtv3ct_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
-::set psout=--sout=#transcode{vcodec=h264,sfilter=logo}:std{access=file,dst=%filename%}}
+::set psout=--sout=#transcode{vcodec=h264,vb=1024,sfilter=logo,sfilter=marq}:std{access=file,mux=ts,dst=%filename%}
 set vlc=%vlcpath% %pothers% %psout%
 if not exist vtv3ct.txt (
 :link_error
-    for /l %%x in (1,1,3) do (
-		echo ERROR___[vtv3ct.txt]___Create file and/or insert links pls___[%%x]/[3]
+    for /l %%x in (1,1,10) do (
+		cls
+		echo ERROR___[vtv3ct.txt]___[%%x]/[10]
 		%canhbao%
 	)
 	goto start_record
@@ -38,12 +42,15 @@ tasklist /fi "WindowTitle eq pi-vtv3ct" | find /i "streamlink.exe" || (
 		ren vtv3ct.tem vtv3ct.txt
 		goto start_record
 	)
-	start "pi-vtv3ct" streamlink --player "%vlc%" "%vtv3ct%" worst --hls-segment-threads 3
 	%batdau%
+	start "pi-vtv3ct" streamlink --player "%vlc%" %vtv3ct% worst --hls-segment-threads 3
 )
+cls
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
+:: Ask for if one want to see stream before quit
+	streamlink --player "%vlcpath%" %vtv3ct% worst
 	echo [ KET THUC GHI ]
 	%ketthuc%
 	goto :eof )

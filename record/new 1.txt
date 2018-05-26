@@ -1,0 +1,45 @@
+ffmpeg -i input.mp4 -c copy -segment_times 600,1100,1400 -f segment out%d.mp4
+
+
+
+# Re-encode source video with one keyframe every 5 frames
+ffmpeg -i source.mkv -g 5 tmp.mkv
+
+# Search black frames
+ffmpeg -i tmp.mkv -vf blackframe -f null -
+
+# Use output to locate black frames right on keyframes
+# Then cut video at those keyframes
+ffmpeg -i tmp.mkv -ss 6.089 -to 180.263 -c copy tmp2.mkv
+
+# If the audio is not in sync with the video, detect silence
+ffmpeg -i tmp2.mkv -map 0:1 -af silencedetect=d=.1 -f null -
+
+# Use output to decide where to cut the audio
+ffmpeg -i tmp2.mkv -map 0:1 -to 173.22 -c:a copy tmp2.ogg
+
+# Merge reencoded video and shortened audio back together
+ffmpeg -i tmp2.mkv -i tmp2.ogg -map 0:0:0 -map 1:0:1 -c:a copy -c:v copy output.mkv
+
+
+-i filegoc.ts -vf blackframe -an -f null - 2>&1 | ack  "(?<=frame:)[0-9]*(?= )" -oh > blacks.tx
+
+ffmpeg -i "$1" -vf blackframe -an -f null - 2>&1 | ack  "(?<=frame:)[0-9]*(?= )" -oh > blacks.txt
+
+
+printf "ffmpeg -i \"$1\""
+printf " -f avi -c:v libx264 -c:a libmp3lame -crf 23 -preset veryslow"
+
+printf " -vf \"select="
+
+cat blacks.txt | while read a; do
+printf "not(eq(n\,$a))*"
+done
+printf "\""
+printf " "
+printf "$2"
+printf "\n"
+rm blacks.txt
+
+
+-i adv_free.ts -ss 1 -t 6 -c:v libx264 -profile:v main -level 3.1 -preset medium -crf 20 -r 25 -b:v 1200k -minrate 1200k -maxrate 1200k -bufsize 1835k -c:a libfdk_aac -ar 48000 -ac 2 -ab 128k  -y part1.ts

@@ -1,3 +1,6 @@
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/5622d2107196077336ed9acd8e0f40011527090011/live/_definst_/vtv1-mid.m3u8
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/2a8d044759647990ada185e19bc6865d1527090027/live/_definst_/vtv1-mid.m3u8
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/32605f42811595f42ba0ce87baaa2c951527090041/live/_definst_/vtv1-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/1189f6af04e7331075ff922d20b299c41527268406/live/_definst_/vtv1-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/53d14371a0dae21fbe718e1c67c1962f1527263467/live/_definst_/vtv1-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/1189f6af04e7331075ff922d20b299c41527268406/live/_definst_/vtv1-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/2f1a98f56777dcae1c266e184e3ec8c61527263488/live/_definst_/vtv1-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/6bba87e42f946d50b7f19d05fb4765df1527263517/live/_definst_/vtv1-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/1189f6af04e7331075ff922d20b299c41527268406/live/_definst_/vtv1-mid.m3u8

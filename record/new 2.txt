@@ -1,0 +1,3 @@
+test.ts -strict experimental -vf "drawtext=fontfile=Times_New_Roman_Bold.ttf':text='www.MySite.com':x=10:y=10:fontsize=20:fontcolor=white" -vcodec libx264 -c:a copy -crf 30 test2.ts
+
+for /f "delims=" %a in ('powershell %p%-1000') do set pp=%a

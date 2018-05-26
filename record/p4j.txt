@@ -1,3 +1,5 @@
-file 'cali_part1.ts'
-file 'cali_part2.ts'
-file 'cali_part3.ts'
+file 'part1.ts'
+file 'part2.ts'
+file 'part4.ts'
+file 'part6.ts'
+file 'part7.ts'

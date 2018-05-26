@@ -32,7 +32,7 @@ for /f "tokens=1,2 delims==" %%L in (autosplit.txt) do (
 	echo %%L | findstr /i "end" && ( set p_start=%%M )
 )
 :: split last part.
-"%p_ffprobe%" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 autosplit.ts >temp.txt
+"%p_ffprobe%" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 %p_file% >temp.txt
 set /p p_len=<temp.txt
 set p_split=%pcopy% -ss %p_start% -to %p_len% part%p_part%.ts 
 "%p_ffmpeg%" -i %p_file% %p_split%
