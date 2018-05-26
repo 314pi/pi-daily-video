@@ -33,6 +33,11 @@ set sub2=00:50:00
 ::=================================
 set ffprobe=C:\Program Files (x86)\Streamlink\ffmpeg\ffprobe.exe
 set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe
+set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
+if not exist "%vlcpath%" set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
+if not exist "%vlcpath%" set /p vlcpath=Enter VLC path: 
+set voice_opt=-I dummy --play-and-exit --volume 1024
+set upload="%vlcpath%" %voice_opt% upload.mp3
 set start=%time%
 ::=================================SEPARATE RECORD FILE TO SEGMENTS
 ::cls
@@ -83,3 +88,4 @@ timeout /t 5 /nobreak >NUL
 ::=================================Time have
 ::cls
 echo START @: %start% / END @: %time%
+%upload%

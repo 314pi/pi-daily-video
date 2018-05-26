@@ -1,2 +1,0 @@
-file '1adv_free.ts'
-file '2adv_free.ts'

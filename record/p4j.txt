@@ -1,5 +1,0 @@
-file 'part1.ts'
-file 'part2.ts'
-file 'part4.ts'
-file 'part6.ts'
-file 'part7.ts'
