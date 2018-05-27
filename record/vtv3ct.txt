@@ -1,1 +1,3 @@
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/0670b51d27a4355e1169d4aedf6759201527304599/live/_definst_/vtv3-mid.m3u8
+http://talk2.vcdn.vn/hls/2a115039dfa342d1f0dff8ac9b1a6050/163a0307786/khonghenhme/index.m3u8
+http://talk2.vcdn.vn/hls/3343b255444e52bf18633050a8ea28d4/163a031e32d/khonghenhme/index.m3u8
+http://vtvgolive-web.04477775.sabai.vn/75de193ff070044cf7bd5aa51b035ed41527411881/live/_definst_/vtv3-low.m3u8
