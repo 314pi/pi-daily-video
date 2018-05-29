@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -i filegoc.ts  -filter_complex "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]" -map "[v]" -map "[a]" -vcodec copy -acodec copy speed.ts

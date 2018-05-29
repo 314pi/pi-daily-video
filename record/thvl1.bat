@@ -1,7 +1,13 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=12:50:00,00
+set hetgio=13:00:00,00
 set pruntime=--run-time 4200
+:: Set Stream Segments
+set hls_seg=%1
+if [%hls_seg%]==[] set hls_seg=10
+:: Set Play Before Quit
+set /a pbq=1
+
 ::==================================================================================
 set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
 if not exist "%vlcpath%" set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
@@ -43,14 +49,14 @@ tasklist /fi "WindowTitle eq pi-thvl1" | find /i "streamlink.exe" || (
 		goto start_record
 	)
 	%batdau%
-	start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads 3
+	start "pi-thvl1" streamlink --player "%vlc%" %thvl1% worst --hls-segment-threads %hls_seg%
 )
 cls
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
 :: Ask for if one want to see stream before quit
-	streamlink --player "%vlcpath%" %thvl1% worst
+	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %thvl1% worst )
 	echo [ KET THUC GHI ]
 	%ketthuc%
 	goto :eof )

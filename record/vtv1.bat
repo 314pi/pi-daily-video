@@ -2,6 +2,12 @@
 :: THIET LAP THONG SO CO DINH
 set hetgio=21:30:00,00
 set pruntime=--run-time 4200
+:: Set Stream Segments
+set hls_seg=%1
+if [%hls_seg%]==[] set hls_seg=10
+:: Set Play Before Quit
+set /a pbq=1
+
 ::==================================================================================
 set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
 if not exist "%vlcpath%" set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
@@ -11,7 +17,7 @@ set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
 set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
-set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=4 --marq-size=15 --marq-y=1 
+set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size=15 --marq-y=15 --marq-color=16776960 
 set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
 set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
@@ -43,14 +49,14 @@ tasklist /fi "WindowTitle eq pi-vtv1" | find /i "streamlink.exe" || (
 		goto start_record
 	)
 	%batdau%
-	start "pi-vtv1" streamlink --player "%vlc%" %vtv1% worst --hls-segment-threads 3
+	start "pi-vtv1" streamlink --player "%vlc%" %vtv1% worst --hls-segment-threads %hls_seg%
 )
 cls
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
 :: Ask for if one want to see stream before quit
-	streamlink --player "%vlcpath%" %vtv1% worst
+	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %vtv1% worst )
 	echo [ KET THUC GHI ]
 	%ketthuc%
 	goto :eof )

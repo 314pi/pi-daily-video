@@ -1,5 +1,3 @@
-http://talk2.vcdn.vn/hls/554fd813a91cd7b3c15bf832be2fb995/163a0214861/xemlelam/index.m3u8
-https://talk2.vcdn.vn/hls/9366e332fcd9311860654b1a4b9163df/163a00ea962/vtvmch/index.m3u8
-http://talk2.vcdn.vn/hls/2d8b8d1090ab5b6addc5073945ca4cd2/1639fbd751d/vtvmch/index.m3u8
-http://talk2.vcdn.vn/hls/1070c55f26acc316ec8496accbe4fc60/1639fc099d8/vtvmch/index.m3u8
-https://talk2.vcdn.vn/hls/9366e332fcd9311860654b1a4b9163df/163a00ea962/vtvmch/index.m3u8
+http://live2.thvli.vn/b0a0045b093c819da11883a57d94e9df1527610148/live/thvl1hd_720000/index.m3u8
+http://live2.thvli.vn/427fcfb9974e95d695f747a81e11793f1527610452/live/thvl1hd_720000/index.m3u8
+http://live2.thvli.vn/2f9909e7e3dd57e711d841f938aeb73d1527610753/live/thvl1hd_720000/index.m3u8

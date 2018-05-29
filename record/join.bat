@@ -12,11 +12,13 @@ set name=%name: =%
 if exist p4j.txt del p4j.txt
 copy NUL p4j.txt
 for %%i in (part*.ts) do (
-:: Sua file goc and if Resolution # 640x480 then change resolution to 640x480 keep video quality
+:: Sua file goc and if Resolution # 640x??? then change resolution to 640x??? keep video quality
 	"!ffprobe!" -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 %%i >reso.txt
 	set /p reso=<reso.txt
 	del reso.txt
 	if "x!reso:640=!" == "x!reso!" (
+		echo CHU Y .....!reso!
+		pause
 		"!ffmpeg!" -i %%i -strict experimental -vcodec libx264 -vf scale=640:-2 -crf 30 -c:a copy -ss 0 -t 10800 repair%%i
  	) else (
 		"!ffmpeg!" -probesize 50M -analyzeduration 50M -i %%i -vcodec copy -acodec copy -ss 0 -to 10800 repair%%i

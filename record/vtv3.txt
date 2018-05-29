@@ -1,2 +1,5 @@
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/be1e3efc4241496bd7f8c86a2d509ae21527185867/live/_definst_/vtv3-mid.m3u8
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/aaa0e9d3500fdfdb43e68cc06ecd14441527186392/live/_definst_/vtv3-mid.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/e4bbafa92e6d7676e96aca77f8747e371527610059/live/_definst_/vtv3-low.m3u8
+http://vtvgo-live-appobj.b5695cde.cdnviet.com/b99a6c696d624d236e9350b1423571b01527610141/live/_definst_/vtv3-low.m3u8
+https://talk2.vcdn.vn/hls/d5e2244e339d13883d4fdfdcd1d91517/163ac020f8c/khonghenhme/index.m3u8
+http://talk2.vcdn.vn/hls/286d0c9156aecda804e696c927cb8549/163ac03d1ab/khonghenhme/index.m3u8
+http://talk2.vcdn.vn/hls/0165105891c5c5b266a4a19f886917bf/163ac02fe42/khonghenhme/index.m3u8
