@@ -1,0 +1,3 @@
+http://talk.vcdn.vn/hls/36dcc8d3ecc3cb3434201e86653bc137/163baf1558c/emo.16/index.m3u8
+http://talk.vcdn.vn/hls/d80b3ba00fd5d3305db7be204509c1fc/163baf1caaa/emo.16/index.m3u8
+http://talk.vcdn.vn/hls/74ee8c24ca352980ed88b622a4791a80/163baf255ab/emo.16/index.m3u8

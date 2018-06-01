@@ -1,6 +1,6 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=21:30:00,00
+set hetgio=20:55:00,00
 set pruntime=--run-time 4200
 :: Set Stream Segments
 set hls_seg=%1
@@ -24,36 +24,36 @@ set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
 
 :start_record
-set filename=vtv1_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
+set filename=todaytv_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
 ::set psout=--sout=#transcode{width=640,height=360}:std{access=file,mux=ts,dst=%filename%}
 set vlc=%vlcpath% %pothers% %psout%
-if not exist vtv1.txt (
+if not exist todaytv.txt (
 :link_error
     for /l %%x in (1,1,10) do (
 		cls
-		echo ERROR___[vtv1.txt]___[%%x]/[10]
+		echo ERROR___[todaytv.txt]___[%%x]/[10]
 		%canhbao%
 	)
 	goto start_record
 )
-for %%a in (vtv1.txt) do set fsize=%%~za
+for %%a in (todaytv.txt) do set fsize=%%~za
 if %fsize% equ 0 (
 	goto link_error )
-set /p vtv1=<vtv1.txt
-tasklist /fi "WindowTitle eq pi-vtv1" | find /i "streamlink.exe" || (
-	streamlink "%vtv1%" | find /i "Available streams" || (
-		more +1 <vtv1.txt >vtv1.tem
-		del vtv1.txt
-		ren vtv1.tem vtv1.txt
+set /p todaytv=<todaytv.txt
+tasklist /fi "WindowTitle eq pi-todaytv" | find /i "streamlink.exe" || (
+	streamlink "%todaytv%" | find /i "Available streams" || (
+		more +1 <todaytv.txt >todaytv.tem
+		del todaytv.txt
+		ren todaytv.tem todaytv.txt
 		goto start_record
 	)
 	%batdau%
 	if %usevlc% equ 1 (
-		start "pi-vtv1" streamlink --player "%vlc%" %vtv1% worst --hls-segment-threads %hls_seg%
+		start "pi-todaytv" streamlink --player "%vlc%" %todaytv% worst --hls-segment-threads %hls_seg%
 	) else (
-		start "pi-vtv1" streamlink %vtv1% worst --hls-segment-threads %hls_seg% -o %filename%
+		start "pi-todaytv" streamlink %todaytv% worst --hls-segment-threads %hls_seg% -o %filename%
 	)
 )
 cls
@@ -61,7 +61,7 @@ timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
 :: Ask for if one want to see stream before quit
-	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %vtv1% worst )
+	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %todaytv% worst )
 	echo [ KET THUC GHI ]
 	%ketthuc%
 	goto :eof )
