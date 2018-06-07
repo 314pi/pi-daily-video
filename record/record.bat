@@ -22,16 +22,23 @@ set pothers=-I dummy --network-caching=60000 --play-and-exit
 ::======================================
 set kenh=%1
 if [%kenh%]==[] set kenh=test
-for /f "delims=" %%a in ('call ini.cmd tv.ini %kenh% stop') do ( set "hetgio=%%a" )
+call :ini hetgio tv.ini %kenh% stop
 set hetgio=%hetgio: =%
 set /a stt_link=1
 
 :start_record
-if %stt_link% geq 5 ( set /a "stt_link = 1" )
-for /f "delims=" %%a in ('call ini.cmd tv.ini %kenh% link%stt_link%') do ( set "streamurl=%%a" )
-if "%streamurl:http=%" == "%streamurl%" ( 
+if %stt_link% geq 5 ( 
+	for /l %%x in (1,1,10) do (
+		cls
+		echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[10]
+		%canhbao%
+	)
+	set /a "stt_link = 1" 
+)
+call :ini streamurl tv.ini %kenh% link%stt_link%
+if  "x!streamurl:http=!" == "x!streamurl!" (
 	set /a stt_link+=1
-	goto start_record 
+	goto start_record
 )
 set streamurl=%streamurl: =%
 set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
@@ -43,16 +50,9 @@ set vlc=%vlcpath% %pothers% %psout%
 :: Tren day chi su dung cho ghi bang VLC
 
 tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
-	echo Stream URL : %streamurl%
+	echo [%kenh%] URL [%stt_link%] : %streamurl%
 	streamlink "%streamurl%" | find /i "Available streams" || (
 		set /a stt_link+=1
-		if %stt_link% geq 5 ( 
-			for /l %%x in (1,1,10) do (
-				cls
-				echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[10]
-				%canhbao%
-			)
-		)
 		goto start_record
 	)
 	%batdau%
@@ -90,11 +90,12 @@ goto start_record
 				set currkey=%%b
 				set currval=%%c
 				if "x!area!"=="x!currarea!" if "x!key!"=="x!currkey!" (
-					echo !currval!
+					goto done
 				)
 			)
 		)
 	)
+	:done
 	endlocal & if not "%~1"=="" set "%~1=%currval%" & exit /b
 	goto :eof
 
