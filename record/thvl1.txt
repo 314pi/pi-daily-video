@@ -1,2 +1,2 @@
-http://talk.vcdn.vn/hls/8865d774f62958bc198defe73e6d2918/163ba674ca8/emo.16/index.m3u8
-http://talk.vcdn.vn/hls/fa1e7303f23c4fbc3bebacdcc91598ef/163ba7009d6/emo.16/index.m3u8
+http://live2.thvli.vn/25ddd8cd478b83f3952e311966ee82cd1528391640/live/thvl1hd_720000/index.m3u8
+http://live2.thvli.vn/fae1d331ef0be2c6d6c411945e2bf9691528387722/live/thvl1hd_720000/index.m3u8

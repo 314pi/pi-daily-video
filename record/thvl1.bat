@@ -1,6 +1,6 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=12:55:00,00
+set hetgio=12:50:00,00
 set pruntime=--run-time 4200
 :: Set Stream Segments
 set hls_seg=%1

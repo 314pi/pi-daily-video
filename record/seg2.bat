@@ -6,33 +6,33 @@ set filename=filegoc.ts
 set /a sub=1
 set /a compress=0
 set /a speedup=0
-set pispd=1.25
+set /a pispd=1.25
 set special=0
-set logo=htv21.png
+set logo=thvl1.png
 
 :: First seg - REMOVE
-set del1=00:05:01
+set del1=00:06:55
 
 :: Segment for SUB 1 - File name=seg1.ts - Length = 10 seconds.
-set sub1=00:05:11
+set sub1=00:07:05
 
 :: seg1 of FILM
-set fil1=00:19:57
+set fil1=00:20:03
 
 :: Adv 1 - REMOVE
-set adv1=00:24:38
+set adv1=00:20:54
 
 :: seg2 of FILM
-set fil2=00:37:43
+set fil2=00:35:51
 
 :: Adv 2 - REMOVE
-set adv2=00:41:56
+set adv2=00:36:55
 
 ::seg3 of FILM
-set fil3=00:55:47
+set fil3=00:47:34
 
 :: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.ts
-set sub2=00:55:57
+set sub2=00:48:34
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
 :: Last seg - REMOVE (remain seg - auto make by ffmpeg)
 ::=================================

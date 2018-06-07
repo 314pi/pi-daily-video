@@ -1,7 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 cls
-
+set simple=%1
+if [%simple%]==[] set simple=1
 ::==================================================================
 set ffprobe=C:\Program Files (x86)\Streamlink\ffmpeg\ffprobe.exe
 set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe
@@ -11,6 +12,8 @@ set name=%name: =%
 ::==================================================================
 if exist p4j.txt del p4j.txt
 copy NUL p4j.txt
+if %simple% equ 1 goto simple
+::==============================COMPLEX JOIN
 for %%i in (part*.ts) do (
 :: Sua file goc and if Resolution # 640x360 then change resolution to 640x360 keep video quality
 	"!ffprobe!" -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 %%i >reso.txt
@@ -31,5 +34,11 @@ for %%i in (part*.ts) do (
 )
 
 :: Join
+"%ffmpeg%" -f concat -i p4j.txt -c copy join_%name%
+del p4j.txt
+goto :eof
+::==============================SIMPLE JOIN PARTS
+:simple
+(for %%i in (part*.ts) do @echo file '%%i') > p4j.txt
 "%ffmpeg%" -f concat -i p4j.txt -c copy join_%name%
 del p4j.txt

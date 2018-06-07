@@ -1,6 +1,6 @@
 @echo off
 :: THIET LAP THONG SO CO DINH
-set hetgio=22:50:00,00
+set hetgio=12:50:00,00
 set pruntime=--run-time 4200
 :: Set Stream Segments
 set hls_seg=%1
@@ -24,36 +24,36 @@ set pothers=-I dummy --network-caching=60000 --play-and-exit %pruntime%
 ::==================================================================================
 
 :start_record
-set filename=vtv3_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
+set filename=htv2_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
 ::set psout=--sout=#transcode{width=640,height=360}:std{access=file,mux=ts,dst=%filename%}
 set vlc=%vlcpath% %pothers% %psout%
-if not exist vtv3.txt (
+if not exist htv2.txt (
 :link_error
     for /l %%x in (1,1,10) do (
 		cls
-		echo ERROR___[vtv3.txt]___[%%x]/[10]
+		echo ERROR___[htv2.txt]___[%%x]/[10]
 		%canhbao%
 	)
 	goto start_record
 )
-for %%a in (vtv3.txt) do set fsize=%%~za
+for %%a in (htv2.txt) do set fsize=%%~za
 if %fsize% equ 0 (
 	goto link_error )
-set /p vtv3=<vtv3.txt
-tasklist /fi "WindowTitle eq pi-vtv3" | find /i "streamlink.exe" || (
-	streamlink "%vtv3%" | find /i "Available streams" || (
-		more +1 <vtv3.txt >vtv3.tem
-		del vtv3.txt
-		ren vtv3.tem vtv3.txt
+set /p htv2=<htv2.txt
+tasklist /fi "WindowTitle eq pi-htv2" | find /i "streamlink.exe" || (
+	streamlink "%htv2%" | find /i "Available streams" || (
+		more +1 <htv2.txt >htv2.tem
+		del htv2.txt
+		ren htv2.tem htv2.txt
 		goto start_record
 	)
 	%batdau%
 	if %usevlc% equ 1 (
-		start "pi-vtv3" streamlink --player "%vlc%" %vtv3% worst --hls-segment-threads %hls_seg%
+		start "pi-htv2" streamlink --player "%vlc%" %htv2% worst --hls-segment-threads %hls_seg%
 	) else (
-		start "pi-vtv3" streamlink %vtv3% worst --hls-segment-threads %hls_seg% -o %filename%
+		start "pi-htv2" streamlink %htv2% worst --hls-segment-threads %hls_seg% -o %filename%
 	)
 )
 cls
@@ -61,7 +61,7 @@ timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
 :: Ask for if one want to see stream before quit
-	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %vtv3% worst )
+	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %htv2% worst )
 	echo [ KET THUC GHI ]
 	%ketthuc%
 	goto :eof )
