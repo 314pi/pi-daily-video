@@ -58,7 +58,7 @@ tasklist /fi "WindowTitle eq pi-htv21" | find /i "streamlink.exe" || (
 )
 cls
 timeout /t 10 /nobreak
-call :getTime now
+call :	 now
 if "%now%" geq "%hetgio%" (
 :: Ask for if one want to see stream before quit
 	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %htv21% worst )

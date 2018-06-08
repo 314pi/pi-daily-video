@@ -1,60 +1,47 @@
 @echo off
 setlocal enableextensions disabledelayedexpansion
-:: THIET LAP THONG SO CO DINH
-cls
-set hls_seg=10
-set /a pbq=1
-set /a usevlc=0
-set vlcpath=C:\Program Files\VideoLAN\VLC\vlc.exe
-if not exist "%vlcpath%" set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
-if not exist "%vlcpath%" set /p vlcpath=Enter VLC path: 
+cls & set "kenh=%1"
+if [%kenh%]==[] set "kenh=test"
+set "hls_seg=10" & set /a "usevlc=0"
+set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
 set voice_opt=-I dummy --play-and-exit --volume 1024
 set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
-::======================================
-:: Duoi day chi su dung cho ghi bang VLC: set /a usevlc=1
 set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
 set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size=15 --marq-y=15 --marq-color=16776960 
 set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
 set pothers=-I dummy --network-caching=60000 --play-and-exit
-:: Tren day chi su dung cho ghi bang VLC
 ::======================================
-set kenh=%1
-if [%kenh%]==[] set kenh=test
 call :ini hetgio tv.ini %kenh% stop
 set hetgio=%hetgio: =%
+if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
+call :ini pbq tv.ini %kenh% pbq
+set pbq=%pbq: =%
+if "%pbq%" == "" ( set "pbq=0" )
 set /a stt_link=1
-
+::======================================
 :start_record
 if %stt_link% geq 5 ( 
 	for /l %%x in (1,1,10) do (
-		cls
-		echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[10]
-		%canhbao%
-	)
-	set /a "stt_link = 1" 
-)
+		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[10]
+		%canhbao% )
+	set /a "stt_link = 1" )
 call :ini streamurl tv.ini %kenh% link%stt_link%
 if  "x!streamurl:http=!" == "x!streamurl!" (
-	set /a stt_link+=1
-	goto start_record
-)
+	set /a "stt_link+=1" & goto start_record )
 set streamurl=%streamurl: =%
 set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
-:: Duoi day chi su dung cho ghi bang VLC: set /a usevlc=1
 set psout=--sout=file/ts:%filename%
 ::set psout=--sout=#transcode{width=640,height=360}:std{access=file,mux=ts,dst=%filename%}
 set vlc=%vlcpath% %pothers% %psout%
-:: Tren day chi su dung cho ghi bang VLC
 
 tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
-	echo [%kenh%] URL [%stt_link%] : %streamurl%
+	echo HET@[%hetgio%]-[%kenh%] URL [%stt_link%] : %streamurl%
 	streamlink "%streamurl%" | find /i "Available streams" || (
-		set /a stt_link+=1
-		goto start_record
-	)
+		echo URL KHONG DUNG !
+		set /a "stt_link+=1" & goto start_record )
 	%batdau%
 	if %usevlc% equ 1 (
 		start "pi-%kenh%" streamlink --player "%vlc%" %streamurl% worst --hls-segment-threads %hls_seg%
@@ -62,33 +49,28 @@ tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
 		start "pi-%kenh%" streamlink %streamurl% worst --hls-segment-threads %hls_seg% -o %filename%
 	)
 )
-cls
+cls & echo HET@[%hetgio%]-[%kenh%] URL [%stt_link%] : %streamurl%
 timeout /t 10 /nobreak
 call :getTime now
 if "%now%" geq "%hetgio%" (
 :: Ask for if one want to see stream before quit
-	if %pbq% equ 1 ( streamlink --player "%vlcpath%" %streamurl% worst )
+	if "%pbq%" == "1" ( streamlink --player "%vlcpath%" %streamurl% worst )
 	echo [ KET THUC GHI ]
-	%ketthuc%
-	goto :eof )
+	%ketthuc% & goto :eof )
 goto start_record
 
 ::Doc file cau hinh TV.INI
 :ini bien [tepini] [muc] [khoa]
-	setlocal enableextensions enabledelayedexpansion
 	@echo off
-	set file=%~2
-	set area=[%~3]
-	set key=%~4
-	set currarea=
+	setlocal enableextensions enabledelayedexpansion
+	set "file=%~2" & set "area=[%~3]" & set "key=%~4" & set "currarea="
 	for /f "usebackq delims=" %%a in ("!file!") do (
 		set ln=%%a
 		if "x!ln:~0,1!"=="x[" (
 			set currarea=!ln!
 		) else (
 			for /f "tokens=1,2 delims==" %%b in ("!ln!") do (
-				set currkey=%%b
-				set currval=%%c
+				set "currkey=%%b" & set "currval=%%c"
 				if "x!area!"=="x!currarea!" if "x!key!"=="x!currkey!" (
 					goto done
 				)
@@ -97,6 +79,34 @@ goto start_record
 	)
 	:done
 	endlocal & if not "%~1"=="" set "%~1=%currval%" & exit /b
+	goto :eof
+
+:: Thoi gian thuc hien ghi Video
+:getStop stop gi ph
+	@echo off
+	setlocal enableextensions disabledelayedexpansion
+	if not "%~2"=="" (
+		set /a tg=%~2
+	) else (
+		set /a tg=0 )
+	if not "%~3"=="" (
+		set /a tp=%~3
+	) else (
+		set /a tp=0 )
+
+	set start=%time%
+	set /a thoigian=(1%start:~0,2%-100)*3600 + (1%start:~3,2%-100)*60 + (1%start:~6,2%-100) + %tg%*3600 + %tp%*60
+	
+	set /a gio=%thoigian% / 3600
+	set /a phut=(%thoigian% - %gio%*3600) / 60
+	set /a giay=(%thoigian% - %gio%*3600 - %phut%*60)
+
+	if %gio% geq 24 set /a gio=%gio%-24
+	if %gio% lss 10 set gio=0%gio%
+	if %phut% lss 10 set phut=0%phut%
+	if %giay% lss 10 set giay=0%giay%
+
+	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%,00" & exit /b
 	goto :eof
 
 :: getTime
