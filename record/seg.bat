@@ -4,35 +4,35 @@ cls
 ::=================================LIST SEGNEMTS TO SEPARATE
 set filename=filegoc.ts
 set /a sub=1
-set /a compress=1
-set /a speedup=1
+set /a compress=0
+set /a speedup=0
 set pispd=1.25
 set special=0
 set logo=htv21.png
 
 :: First seg - REMOVE
-set del1=00:19:17
+set del1=00:00:00
 
 :: Segment for SUB 1 - File name=seg1.ts - Length = 10 seconds.
-set sub1=00:19:27
+set sub1=00:00:10
 
 :: seg1 of FILM
-set fil1=00:33:04
+set fil1=00:12:26
 
 :: Adv 1 - REMOVE
-set adv1=00:37:09
+set adv1=00:12:45
 
 :: seg2 of FILM
-set fil2=00:51:23
+set fil2=00:27:47
 
 :: Adv 2 - REMOVE
-set adv2=00:56:27
+set adv2=00:29:39
 
 ::seg3 of FILM
-set fil3=01:07:48
+set fil3=00:41:05
 
 :: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.ts
-set sub2=01:07:58
+set sub2=00:41:15
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
 :: Last seg - REMOVE (remain seg - auto make by ffmpeg)
 ::=================================

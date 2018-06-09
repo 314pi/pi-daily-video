@@ -1,64 +1,15 @@
 @echo off
 setlocal enableextensions disabledelayedexpansion
-cls & set "kenh=%1"
-if [%kenh%]==[] set "kenh=test"
-set "hls_seg=10" & set /a "usevlc=0"
-set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
-set voice_opt=-I dummy --play-and-exit --volume 1024
-set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
-set batdau="%vlcpath%" %voice_opt% batdau.mp3
-set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
-set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
-set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size=15 --marq-y=15 --marq-color=16776960 
-set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
-set pothers=-I dummy --network-caching=60000 --play-and-exit
-::======================================
-call :ini hetgio tv.ini %kenh% stop
+cls
+
+call :ini hetgio tv.ini test stop
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
 call :chongio hetgio "%hetgio%"
-call :ini pbq tv.ini %kenh% pbq
-set pbq=%pbq: =%
-if "%pbq%" == "" ( set "pbq=0" )
-set /a stt_link=1
-::======================================
-:start_record
-if %stt_link% geq 5 ( 
-	for /l %%x in (1,1,10) do (
-		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[10]
-		%canhbao% )
-	set /a "stt_link = 1" )
-call :ini streamurl tv.ini %kenh% link%stt_link%
-if  "x!streamurl:http=!" == "x!streamurl!" (
-	set /a "stt_link+=1" & goto start_record )
-set streamurl=%streamurl: =%
-set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
-set filename=%filename: =%
-set psout=--sout=file/ts:%filename%
-::set psout=--sout=#transcode{width=640,height=360}:std{access=file,mux=ts,dst=%filename%}
-set vlc=%vlcpath% %pothers% %psout%
-::=========================================
-call :getTime now
-if "%now%" geq "%hetgio%" (
-	if "%pbq%" == "1" ( streamlink --player "%vlcpath%" %streamurl% worst )
-	echo [ KET THUC GHI ]
-	%ketthuc% & goto :eof )
-::=========================================
-tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
-	echo HET@[%hetgio%]-[%kenh%] URL [%stt_link%] : %streamurl%
-	streamlink "%streamurl%" | find /i "Available streams" || (
-		echo URL KHONG DUNG !
-		set /a "stt_link+=1" & goto start_record )
-	%batdau%
-	if %usevlc% equ 1 (
-		start "pi-%kenh%" streamlink --player "%vlc%" %streamurl% worst --hls-segment-threads %hls_seg%
-	) else (
-		start "pi-%kenh%" streamlink %streamurl% worst --hls-segment-threads %hls_seg% -o %filename%
-	)
-)
-cls & echo HET@[%hetgio%]-[%kenh%] URL [%stt_link%] : %streamurl%
-timeout /t 10 /nobreak
-goto start_record
+echo %hetgio%
+
+
+goto :eof
 
 :chongio gio str
 	@echo off
@@ -80,7 +31,7 @@ goto start_record
 	for /f "tokens=%2 delims=va" %%a in ("%str%") do (
 		set giotach=%%a )
 	endlocal & if not "%~1"=="" set "%~1=%giotach%" & exit /b
-	
+
 ::Doc file cau hinh TV.INI
 :ini bien [tepini] [muc] [khoa]
 	@echo off
@@ -101,7 +52,6 @@ goto start_record
 	)
 	:done
 	endlocal & if not "%~1"=="" set "%~1=%currval%" & exit /b
-	goto :eof
 
 :: Thoi gian thuc hien ghi Video
 :getStop stop gi ph
@@ -131,7 +81,6 @@ goto start_record
 	if %giay% lss 10 set giay=0%giay%
 
 	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%,00" & exit /b
-	goto :eof
 
 :: getTime
 ::    This routine returns the current (or passed as argument) time
