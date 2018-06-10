@@ -11,28 +11,28 @@ set special=0
 set logo=htv21.png
 
 :: First seg - REMOVE
-set del1=00:00:00
+set del1=00:05:34
 
 :: Segment for SUB 1 - File name=seg1.ts - Length = 10 seconds.
-set sub1=00:00:10
+set sub1=00:05:44
 
 :: seg1 of FILM
-set fil1=00:12:26
+set fil1=00:17:51
 
 :: Adv 1 - REMOVE
-set adv1=00:12:45
+set adv1=00:22:44
 
 :: seg2 of FILM
-set fil2=00:27:47
+set fil2=00:36:04
 
 :: Adv 2 - REMOVE
-set adv2=00:29:39
+set adv2=00:40:54
 
 ::seg3 of FILM
-set fil3=00:41:05
+set fil3=00:55:32
 
 :: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.ts
-set sub2=00:41:15
+set sub2=00:55:42
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
 :: Last seg - REMOVE (remain seg - auto make by ffmpeg)
 ::=================================

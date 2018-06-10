@@ -3,15 +3,13 @@ setlocal enableextensions disabledelayedexpansion
 cls & set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
 set "hls_seg=10" & set /a "usevlc=0"
-set vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe
-set voice_opt=-I dummy --play-and-exit --volume 1024
+set "vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe" & set "voice_opt=-I dummy --play-and-exit --volume 1024"
 set canhbao="%vlcpath%" %voice_opt% canhbao.mp3
 set batdau="%vlcpath%" %voice_opt% batdau.mp3
 set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
-set plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164
 set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size=15 --marq-y=15 --marq-color=16776960 
 set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
-set pothers=-I dummy --network-caching=60000 --play-and-exit
+set "plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164" & set "pothers=-I dummy --network-caching=60000 --play-and-exit"
 ::======================================
 call :ini hetgio tv.ini %kenh% stop
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
@@ -36,11 +34,10 @@ set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
 ::set psout=--sout=#transcode{width=640,height=360}:std{access=file,mux=ts,dst=%filename%}
-set vlc=%vlcpath% %pothers% %psout%
 ::=========================================
 call :getTime now
 if "%now%" geq "%hetgio%" (
-	if "%pbq%" == "1" ( streamlink --player "%vlcpath%" %streamurl% worst )
+	if "%pbq%" == "1" ( start "pbq-%kenh%" streamlink --player "%vlcpath% --run-time 120 --play-and-exit" %streamurl% worst )
 	echo [ KET THUC GHI ]
 	%ketthuc% & goto :eof )
 ::=========================================
@@ -51,7 +48,7 @@ tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
 		set /a "stt_link+=1" & goto start_record )
 	%batdau%
 	if %usevlc% equ 1 (
-		start "pi-%kenh%" streamlink --player "%vlc%" %streamurl% worst --hls-segment-threads %hls_seg%
+		start "pi-%kenh%" streamlink --player "%vlcpath% %pothers% %psout%" %streamurl% worst --hls-segment-threads %hls_seg%
 	) else (
 		start "pi-%kenh%" streamlink %streamurl% worst --hls-segment-threads %hls_seg% -o %filename%
 	)
