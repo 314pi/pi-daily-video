@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 cls
-::=================================LIST SEGNEMTS TO SEPARATE
-set filename=filegoc.ts
+::=================================LIST SEGNEMTS TO SEPARATE (http://chuyendungath.com/images/videos/up/)
+set filename=phim.ts
 set /a sub=1
 set /a compress=0
 set /a speedup=0
@@ -11,28 +11,28 @@ set special=0
 set logo=htv21.png
 
 :: First seg - REMOVE
-set del1=00:05:34
+set del1=00:00:00
 
 :: Segment for SUB 1 - File name=seg1.ts - Length = 10 seconds.
-set sub1=00:05:44
+set sub1=00:00:10
 
 :: seg1 of FILM
-set fil1=00:17:51
+set fil1=00:29:29
 
 :: Adv 1 - REMOVE
-set adv1=00:22:44
+set adv1=00:29:29
 
 :: seg2 of FILM
-set fil2=00:36:04
+set fil2=00:29:29
 
 :: Adv 2 - REMOVE
-set adv2=00:40:54
+set adv2=00:31:35
 
 ::seg3 of FILM
-set fil3=00:55:32
+set fil3=00:39:42
 
 :: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.ts
-set sub2=00:55:42
+set sub2=00:39:52
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
 :: Last seg - REMOVE (remain seg - auto make by ffmpeg)
 ::=================================
@@ -51,7 +51,7 @@ echo Separating Sengments ...
 
 if %sub% equ 0 goto ig_sub
 ::=================================Set font size for SUB 1 and SUB 2
-set "subfont1=10" & set "subfont2=20"
+set "subfont1=10" & set "subfont2=15"
 :: USE FOR SPECIAL MODE
 if %special% equ 1 ( set "subfont1=20" & set "subfont2=30")
 set subtext1=-vf "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:y=10:fontsize=%subfont1%:fontcolor=white"
@@ -99,7 +99,7 @@ if %speedup% equ 0 (
 echo Re encoding (compressing) ...
 timeout /t 5 /nobreak >NUL
 ::set speed=-filter_complex "[0:v]setpts=(1/1.25)*PTS[v];[0:a]atempo=1.25[a]" -map "[v]" -map "[a]"
-"%ffmpeg%" -i join_%name% -strict experimental -vcodec libx264 -crf 30 %speed% -ss 0 -t 10800 comp_%name%
+"%ffmpeg%" -i join_%name% -vcodec libx264 -crf 30 %speed% -ss 0 -t 10800 comp_%name%
 :ig_compress
 ::=================================Speedup video and audio
 ::if %speedup% equ 0 goto ig_speedup

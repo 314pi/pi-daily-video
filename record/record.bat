@@ -18,6 +18,9 @@ call :chongio hetgio "%hetgio%"
 call :ini pbq tv.ini %kenh% pbq
 set pbq=%pbq: =%
 if "%pbq%" == "" ( set "pbq=0" )
+call :ini cbq tv.ini %kenh% cbq
+set cbq=%cbq: =%
+if "%cbq%" == "" ( set "cbq=1" )
 set /a stt_link=1
 ::======================================
 :start_record
@@ -37,12 +40,13 @@ set psout=--sout=file/ts:%filename%
 ::=========================================
 call :getTime now
 if "%now%" geq "%hetgio%" (
+	if "%cbq%" == "1" ( tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" && taskkill /im "streamlink.exe" /fi "WindowTitle eq pi-%kenh%")
 	if "%pbq%" == "1" ( start "pbq-%kenh%" streamlink --player "%vlcpath% --run-time 120 --play-and-exit" %streamurl% worst )
 	echo [ KET THUC GHI ]
 	%ketthuc% & goto :eof )
 ::=========================================
 tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
-	echo HET@[%hetgio%]-[%kenh%] URL [%stt_link%] : %streamurl%
+	echo URL[%stt_link%]=%streamurl%
 	streamlink "%streamurl%" | find /i "Available streams" || (
 		echo URL KHONG DUNG !
 		set /a "stt_link+=1" & goto start_record )
@@ -53,7 +57,7 @@ tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
 		start "pi-%kenh%" streamlink %streamurl% worst --hls-segment-threads %hls_seg% -o %filename%
 	)
 )
-cls & echo HET@[%hetgio%]-[%kenh%] URL [%stt_link%] : %streamurl%
+cls & echo [%kenh%]-[STOP@ %hetgio%]-[PBQ:%pbq%]-[CBQ:%cbq%] & echo.URL[%stt_link%]=%streamurl%
 timeout /t 10 /nobreak
 goto start_record
 
