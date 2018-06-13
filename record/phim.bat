@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -i "filegoc.ts" -vcodec copy -acodec copy -ss 00:52:03 -to 01:32:01 phim.ts
+"C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe" -err_detect ignore_err -i "filegoc.ts" -vcodec copy -acodec copy -ss 00:13:31 -to 01:02:10 phim.ts

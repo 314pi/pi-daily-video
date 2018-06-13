@@ -17,22 +17,22 @@ set del1=00:00:00
 set sub1=00:00:10
 
 :: seg1 of FILM
-set fil1=00:29:29
+set fil1=00:12:55
 
 :: Adv 1 - REMOVE
-set adv1=00:29:29
+set adv1=00:15:15
 
 :: seg2 of FILM
-set fil2=00:29:29
+set fil2=00:48:24
 
 :: Adv 2 - REMOVE
-set adv2=00:31:35
+set adv2=00:48:24
 
 ::seg3 of FILM
-set fil3=00:39:42
+set fil3=00:48:24
 
 :: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.ts
-set sub2=00:39:52
+set sub2=00:48:34
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
 :: Last seg - REMOVE (remain seg - auto make by ffmpeg)
 ::=================================
