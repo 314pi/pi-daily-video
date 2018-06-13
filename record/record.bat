@@ -33,7 +33,7 @@ call :ini streamurl tv.ini %kenh% link%stt_link%
 if  "x!streamurl:http=!" == "x!streamurl!" (
 	set /a "stt_link+=1" & goto start_record )
 set streamurl=%streamurl: =%
-set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
+set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
 ::set psout=--sout=#transcode{width=640,height=360}:std{access=file,mux=ts,dst=%filename%}
