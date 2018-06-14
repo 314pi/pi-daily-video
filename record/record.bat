@@ -11,16 +11,10 @@ set ptext1=--sub-filter=marq --marq-file=marq1.txt --marq-position=6 --marq-size
 set ptext2=--sub-filter=marq --marq-file=marq2.txt --marq-position=10 --marq-size=15 --marq-y=15
 set "plogo=--logo-file logo.png --logo-x=10 --logo-y=10 --logo-opacity=164" & set "pothers=-I dummy --network-caching=60000 --play-and-exit"
 ::======================================
-call :ini hetgio tv.ini %kenh% stop
+for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] hetgio') do ( %%a )
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
-call :chongio hetgio "%hetgio%"
-for /f "tokens=1-3 delims=x" %%a in ("%hetgio%") do (
-	set "hetgio=%%a" & set "pbq=%%b" & set "cbq=%%c" )
-set pbq=%pbq: =%
-if "%pbq%" == "" ( set "pbq=0" )
-set cbq=%cbq: =%
-if "%cbq%" == "" ( set "cbq=1" )
+call :chongio hetgio pbq cbq "%hetgio%"
 set /a stt_link=1
 ::======================================
 :start_record
@@ -33,6 +27,7 @@ call :ini streamurl tv.ini %kenh% link%stt_link%
 if  "x!streamurl:http=!" == "x!streamurl!" (
 	set /a "stt_link+=1" & goto start_record )
 set streamurl=%streamurl: =%
+set streamurl=%streamurl:@-@==%
 set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
@@ -41,7 +36,7 @@ set psout=--sout=file/ts:%filename%
 call :getTime now
 if "%now%" geq "%hetgio%" (
 	if "%cbq%" == "1" ( tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" && taskkill /im "streamlink.exe" /fi "WindowTitle eq pi-%kenh%")
-	if "%pbq%" == "1" ( start "pbq-%kenh%" streamlink --player "%vlcpath% --run-time 120 --play-and-exit" %streamurl% worst )
+	if "%pbq%" == "1" ( start "pbq-%kenh%" streamlink --player "%vlcpath% --run-time 120 --play-and-exit" "%streamurl%" worst )
 	echo [ KET THUC GHI ]
 	%ketthuc% & goto :eof )
 ::=========================================
@@ -52,19 +47,19 @@ tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
 		set /a "stt_link+=1" & goto start_record )
 	%batdau%
 	if %usevlc% equ 1 (
-		start "pi-%kenh%" streamlink --player "%vlcpath% %pothers% %psout%" %streamurl% worst --hls-segment-threads %hls_seg%
+		start "pi-%kenh%" streamlink --player "%vlcpath% %pothers% %psout%" "%streamurl%" worst --hls-segment-threads %hls_seg%
 	) else (
-		start "pi-%kenh%" streamlink %streamurl% worst --hls-segment-threads %hls_seg% -o %filename%
+		start "pi-%kenh%" streamlink "%streamurl%" worst --hls-segment-threads %hls_seg% -o %filename%
 	)
 )
 cls & echo [%kenh%]-[STOP@ %hetgio%]-[PBQ:%pbq%]-[CBQ:%cbq%] & echo.URL[%stt_link%]=%streamurl%
 timeout /t 10 /nobreak
 goto start_record
 
-:chongio gio str
+:chongio gio pbq cbq str
 	@echo off
 	setlocal enableextensions enabledelayedexpansion
-	set "str=%~2"
+	set "str=%~4"
 	for /l %%i in (1,1,10) do ( 
 		call :tach giotach %%i
 		call :getTime now
@@ -73,7 +68,10 @@ goto start_record
 			goto :thay )
 	)
 	:thay
-	endlocal & if not "%~1"=="" set "%~1=%thay%" & exit /b
+	for /f "tokens=1-3 delims=x" %%a in ("%giotach%") do (
+		set "hetgio=%%a" & set /a "pbq=%%b" & set /a "cbq=%%c" )
+	
+	endlocal & set "%~1=%hetgio%" & set "%~2=%pbq%" & set "%~3=%cbq%" & exit /b
 
 :tach giotach stt
 	@echo off
@@ -105,7 +103,7 @@ goto start_record
 	goto :eof
 
 :: Thoi gian thuc hien ghi Video
-:getStop stop gi ph
+:getStop hetgio gi ph
 	@echo off
 	setlocal enableextensions disabledelayedexpansion
 	if not "%~2"=="" (
@@ -131,7 +129,7 @@ goto start_record
 	if %phut% lss 10 set phut=0%phut%
 	if %giay% lss 10 set giay=0%giay%
 
-	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%,00" & exit /b
+	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%,00x0x1" & exit /b
 	goto :eof
 
 :: getTime

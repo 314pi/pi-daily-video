@@ -31,7 +31,7 @@ for /l %%n in (0,1,%len%) do (
 		for /f "delims=" %%a in ('ini.exe tv.ini !sec! !key!') do (
 			%%a
 			set link=!link%%i!
-			if not "!link!" == "" ( 
+			if not "!link!" == "" (
 				echo checking [!key!] ...
 				streamlink "!link!" | find /i "Available streams" || (
 					ini.exe tv.ini !sec! !key!==
