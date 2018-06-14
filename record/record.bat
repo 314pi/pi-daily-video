@@ -15,10 +15,10 @@ call :ini hetgio tv.ini %kenh% stop
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
 call :chongio hetgio "%hetgio%"
-call :ini pbq tv.ini %kenh% pbq
+for /f "tokens=1-3 delims=x" %%a in ("%hetgio%") do (
+	set "hetgio=%%a" & set "pbq=%%b" & set "cbq=%%c" )
 set pbq=%pbq: =%
 if "%pbq%" == "" ( set "pbq=0" )
-call :ini cbq tv.ini %kenh% cbq
 set cbq=%cbq: =%
 if "%cbq%" == "" ( set "cbq=1" )
 set /a stt_link=1
@@ -68,7 +68,7 @@ goto start_record
 	for /l %%i in (1,1,10) do ( 
 		call :tach giotach %%i
 		call :getTime now
-		if !now! leq !giotach! (
+		if "!now!" leq "!giotach!" (
 			set thay=!giotach!
 			goto :thay )
 	)

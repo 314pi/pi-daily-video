@@ -1,40 +1,30 @@
 @echo off
-setlocal enabledelayedexpansion
-cls
-::=================================LIST SEGNEMTS TO SEPARATE (http://chuyendungath.com/images/videos/up/)
+setlocal enabledelayedexpansion & cls
 set filename=phim.mp4
 set /a sub=1
-set /a compress=1
+set /a compress=0
 set /a speedup=1
-set pispd=1.2
+set pispd=1.1
 set special=0
 set logo=htv21.png
-
-:: First seg - REMOVE
+::::::::::::::::::: First seg - REMOVE
 set del1=00:00:00
-
-:: Segment for SUB 1 - File name=seg1.mp4 - Length = 10 seconds.
+::::::::::::::::::: Segment for SUB 1 - File name=seg1.mp4 - Length = 10 seconds.
 set sub1=00:00:10
+::::::::::::::::::: seg1 of FILM
+set fil1=00:12:51
+::::::::::::::::::: Adv 1 - REMOVE
+set adv1=00:14:11
+::::::::::::::::::: seg2 of FILM
+set fil2=00:29:16
+::::::::::::::::::: Adv 2 - REMOVE
+set adv2=00:31:37
+:::::::::::::::::::seg3 of FILM
+set fil3=00:43:08
+::::::::::::::::::: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.mp4
+set sub2=00:43:18
 
-:: seg1 of FILM
-set fil1=00:13:15
-
-:: Adv 1 - REMOVE
-set adv1=00:17:18
-
-:: seg2 of FILM
-set fil2=00:31:11
-
-:: Adv 2 - REMOVE
-set adv2=00:35:33
-
-::seg3 of FILM
-set fil3=00:48:09
-
-:: Segment for SUB 2 - Length = 60 seconds - Filename=seg7.mp4
-set sub2=00:48:19
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
-:: Last seg - REMOVE (remain seg - auto make by ffmpeg)
 ::=================================
 set ffprobe=C:\Program Files (x86)\Streamlink\ffmpeg\ffprobe.exe
 set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe
@@ -109,4 +99,4 @@ REM "%vlcpath%" -I dummy -vvv comp_%name% --rate=2.0 --sout=file/ts:rate_%name% 
 :::ig_speedup
 ::=================================Time have
 echo START @: %start% / END @: %time%
-%upload%
+::%upload%
