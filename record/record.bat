@@ -23,11 +23,14 @@ if %stt_link% geq 5 (
 		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[10]
 		%canhbao% )
 	set /a "stt_link = 1" )
-call :ini streamurl tv.ini %kenh% link%stt_link%
-if  "x!streamurl:http=!" == "x!streamurl!" (
-	set /a "stt_link+=1" & goto start_record )
-set streamurl=%streamurl: =%
-set streamurl=%streamurl:@-@==%
+for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] link%stt_link%') do ( %%a )	
+call set streamurl=%%link%stt_link%%%
+if not "%streamurl%" == "" (
+	set "streamurl=%streamurl: =%"
+	if "%streamurl%" == "" ( set /a "stt_link+=1" & goto start_record )
+	if "x%streamurl:http=%" == "x%streamurl%" ( set /a "stt_link+=1" & goto start_record )
+	if not "x%streamurl:youtube=%" == "x%streamurl%" ( set qual=360p ) else ( set qual=worst )
+) else ( set /a "stt_link+=1" & goto start_record )
 set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set filename=%filename: =%
 set psout=--sout=file/ts:%filename%
@@ -47,9 +50,9 @@ tasklist /fi "WindowTitle eq pi-%kenh%" | find /i "streamlink.exe" || (
 		set /a "stt_link+=1" & goto start_record )
 	%batdau%
 	if %usevlc% equ 1 (
-		start "pi-%kenh%" streamlink --player "%vlcpath% %pothers% %psout%" "%streamurl%" worst --hls-segment-threads %hls_seg%
-	) else (
-		start "pi-%kenh%" streamlink "%streamurl%" worst --hls-segment-threads %hls_seg% -o %filename%
+		start "pi-%kenh%" streamlink --player "%vlcpath% %pothers% %psout%" "%streamurl%" %qual% --hls-segment-threads %hls_seg%
+	) else ( 
+		start "pi-%kenh%" streamlink "%streamurl%" %qual% --hls-segment-threads %hls_seg% -o %filename%
 	)
 )
 cls & echo [%kenh%]-[STOP@ %hetgio%]-[PBQ:%pbq%]-[CBQ:%cbq%] & echo.URL[%stt_link%]=%streamurl%
