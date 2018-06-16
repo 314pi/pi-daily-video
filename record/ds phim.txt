@@ -2,8 +2,8 @@
 OK		Mỹ Nhân Sài Thành						VTV1		20h 45 	T2-T4 			kiep314 (full)
 OK		Quỳnh Búp Bê							VTV1		20h 45 	T5 T6 			kiep314 (full)
 		==============================================================================================
-		Người Mẹ Không Tên						VTV3		11h 20 	T2-T6			piyeuem314 (full)
-		Kẻ Tái Sinh								VTV3		12h	  	T2-T6			piyeuem314 (full)
+OK		Người Mẹ Không Tên						VTV3		11h 20 	T2-T6			piyeuem314 (full)
+OK		Kẻ Tái Sinh								VTV3		12h	  	T2-T6			piyeuem314 (full)
 OK		Nếu Còn Có Ngày Mai						VTV3		14h   	T7-CN			
 		Bí Mật Cây Cầu Cũ						VTV3		13h 45	T2-T6			piyeuem314 (full)
 OK		Bong Bóng Tình Yêu						VTV3		17h 15	ALL				tuongmai (full)
@@ -22,4 +22,4 @@ OK		Mật Mã Hoa Hồng Vàng					THVL1		20h		T2-T7			pilikeyou314 (full)
 
 
 
-		==============================================================================================
+		==============================================================================================youcompletepi

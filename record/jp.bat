@@ -4,8 +4,8 @@ cls
 set simple=%1
 if [%simple%]==[] set simple=1
 ::==================================================================
-set ffprobe=C:\Program Files (x86)\Streamlink\ffmpeg\ffprobe.exe
-set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe
+set ffprobe=C:\Program Files (x86)\Streamlink\ffmpeg2\ffprobe.exe
+set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg2\ffmpeg.exe
 set name=%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set name=%name: =% 
 
@@ -39,6 +39,8 @@ del p4j.txt
 goto :eof
 ::==============================SIMPLE JOIN PARTS
 :simple
-(for %%i in (part*.mp4) do @echo file '%%i') > p4j.txt
-"%ffmpeg%" -f concat -i p4j.txt -c copy join_%name%
-del p4j.txt
+echo ffconcat version 1.0 > p4j.txt
+(for %%i in (part*.ts) do @echo file %%i) >> p4j.txt
+"%ffmpeg%" -i p4j.txt -c copy -movflags faststart join_%name% -hide_banner
+::"%ffmpeg%" -i p4j.txt -vf mpdecimate,setpts=N/FRAME_RATE/TB,scale=640:-2 -movflags faststart join_%name% -hide_banner
+::del p4j.txt

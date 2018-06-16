@@ -1,6 +1,6 @@
-set ext=mp4
-set input=filegoc.%ext%
-set output=phim.%ext%
-set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg\ffmpeg.exe
+@echo off
+set input=filegoc.mp4
+set output=phim.mp4
+set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg2\ffmpeg.exe
 ::=====================
-"%ffmpeg%" -i "%input%" -vcodec copy -acodec copy -ss 00:29:15  -to 01:18:46 -async 1 "%output%"
+"%ffmpeg%" -i "%input%" -ss 00:07:37 -to 00:53:58 -movflags faststart -fflags +genpts -v error -vcodec copy -acodec copy -reset_timestamps 1 -async 1 -copyts "%output%"
