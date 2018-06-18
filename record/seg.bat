@@ -1,17 +1,17 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: Bat Dau Phim
-set del1=00:00:20
+set del1=00:00:07
 ::::::::::::::::: P I
-set fil1=00:21:24
+set fil1=00:15:31
 ::::::::::::::::: QC I
-set adv1=00:22:30
+set adv1=00:18:13
 ::::::::::::::::: P II
-set fil2=00:22:30
+set fil2=00:18:13
 ::::::::::::::::: QC II
-set adv2=00:22:30
+set adv2=00:18:13
 :::::::::::::::::P 3
-set fil3=01:59:59
+set fil3=00:46:58
 ::=================================
 set filename=phim.mp4
 set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg2\ffmpeg.exe

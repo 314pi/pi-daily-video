@@ -6,8 +6,8 @@ cls
 set chs[0]=thvl1
 set chs[1]=vtv1
 set chs[2]=vtv3
-::set chs[3]=todaytv
-::set chs[4]=htv2
+set chs[3]=htv2
+::set chs[4]=todaytv
 
 set "x=0"
 :LenLoop 
