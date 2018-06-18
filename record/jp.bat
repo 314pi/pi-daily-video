@@ -40,7 +40,7 @@ goto :eof
 ::==============================SIMPLE JOIN PARTS
 :simple
 echo ffconcat version 1.0 > p4j.txt
-(for %%i in (part*.ts) do @echo file %%i) >> p4j.txt
+(for %%i in (part*.mp4) do @echo file %%i) >> p4j.txt
 "%ffmpeg%" -i p4j.txt -c copy -movflags faststart join_%name% -hide_banner
 ::"%ffmpeg%" -i p4j.txt -vf mpdecimate,setpts=N/FRAME_RATE/TB,scale=640:-2 -movflags faststart join_%name% -hide_banner
 ::del p4j.txt

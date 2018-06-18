@@ -11,7 +11,7 @@ set ketthuc="%vlcpath%" %voice_opt% ketthuc.mp3
 for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] hetgio') do ( %%a )
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
-call :chongio hetgio pbq cbq "%hetgio%"
+call :chongio hetgio spd cbq "%hetgio%"
 set /a stt_link=1
 echo stop = %hetgio% > %kenh%.log
 ::======================================
@@ -39,11 +39,13 @@ streamlink "%streamurl%" | find /i "Available streams" || (
 	set /a "stt_link+=1" & goto start_record )
 call :getTime now
 call :TimeSub dur "%hetgio%" "%now%"
-set ffopt=-vf scale=640:-2 -bsf:a aac_adtstoasc -f mp4 -movflags empty_moov+separate_moof+frag_keyframe
+if "%dur%" geq "03:00:00" set dur=03:00:00
+echo %dur% & pause
+set ffopt=-filter_complex [0:v]scale=640:-2,drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:y=10:fontsize=13:fontcolor=white,setpts=(1/%spd%)*PTS[v];[0:a]atempo=%spd%[a] -bsf:a aac_adtstoasc -f mp4 -movflags empty_moov+separate_moof+frag_keyframe -map "[v]" -map "[a]"
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
-echo streamlink "%streamurl%"  worst --hls-duration 00:00:30 > chk%kenh%.bat
-title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%]
+echo streamlink "%streamurl%"  worst --hls-duration 00:00:30 >  %userprofile%\desktop\chk%kenh%.bat
+title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [spd=%spd%]
 ::%batdau%
 streamlink "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename% -hide_banner
 
@@ -55,7 +57,7 @@ if "%now%" leq "%hetgio%" (
 	%ketthuc% & goto :eof )
 goto :eof
 	
-:chongio gio pbq cbq str
+:chongio gio spd cbq str
 	@echo off
 	setlocal enableextensions enabledelayedexpansion
 	set "str=%~4"
@@ -68,8 +70,8 @@ goto :eof
 	)
 	:thay
 	for /f "tokens=1-3 delims=x" %%a in ("%giotach%") do (
-		set "hetgio=%%a" & set /a "pbq=%%b" & set /a "cbq=%%c" )
-	endlocal & set "%~1=%hetgio%" & set "%~2=%pbq%" & set "%~3=%cbq%" & exit /b
+		set "hetgio=%%a" & set "spd=%%b" & set "cbq=%%c" )
+	endlocal & set "%~1=%hetgio%" & set "%~2=%spd%" & set "%~3=%cbq%" & exit /b
 
 :tach giotach stt
 	@echo off
@@ -140,11 +142,11 @@ goto :eof
 : TimeSub st xx yy
 	setlocal enableextensions disabledelayedexpansion
 	if "%~3"=="" ( set "yy=%time%" ) else ( set "yy=%~3" )
-	set /a h=%yy:~0,2%
+	set /a h=100%yy:~0,2% %% 100
 	if %h% lss 10 set h=0%h%
 	set /a end=(1%h%-100)*3600 + (1%yy:~3,2%-100)*60 + (1%yy:~6,2%-100)
 	set "xx=%~2"
-	set /a h=%xx:~0,2%
+	set /a h=100%xx:~0,2% %% 100
 	if %h% lss 10 set h=0%h%
 	set /a start=(1%h%-100)*3600 + (1%xx:~3,2%-100)*60 + (1%xx:~6,2%-100)
 	if %start% geq %end% (

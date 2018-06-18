@@ -1,3 +1,2 @@
-stop = 19:05:00,00 
-[ 17:22:51,85 ]-URL[1]=http://talk2.vcdn.vn/hls/1babc9e2c9b5c2e4e3df36e005d09f85/16408144f1b/minhnhi_vtv/index.m3u8 
-[ 17:37:27,65 ]-URL[1]=http://talk2.vcdn.vn/hls/1babc9e2c9b5c2e4e3df36e005d09f85/16408144f1b/minhnhi_vtv/index.m3u8 
+stop = 12:20:00,00 
+[ 11:19:41,56 ]-URL[1]=https://cdn-livestream-live.vtvgiaitri.vn/vtv3.smil/chunklist_b750000.m3u8 
