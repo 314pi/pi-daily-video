@@ -1,6 +1,6 @@
 @echo off 
 setlocal enabledelayedexpansion 
-set "vlcpath=C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"
+call :getVLC vlcexe
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 cls
 set chs[0]=thvl1
@@ -11,10 +11,10 @@ set chs[3]=htv2
 
 set "x=0"
 :LenLoop 
-if defined chs[%x%] ( 
-   set /a "x+=1"
-   goto :LenLoop 
-)
+	if defined chs[%x%] ( 
+	   set /a "x+=1"
+	   goto :LenLoop 
+	)
 
 set /a len=%x%-1
 for /l %%n in (0,1,%len%) do ( 
@@ -44,8 +44,17 @@ for /l %%n in (0,1,%len%) do (
 		)
 	)
 	if !nolink! geq 4 (
-		set canhbao="!vlcpath!" !voice_opt! !channel! ccl.mp3
+		set canhbao="!vlcexe!" !voice_opt! !channel! ccl.mp3
 		!canhbao!
 	)
 	echo _________________________________________
 )
+
+goto :eof
+
+:getVLC vlcexe
+	@echo off 
+	setlocal enabledelayedexpansion
+	if exist "%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe" ( set "vlcexe=%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe" )
+	if exist "%ProgramFiles%\VideoLAN\VLC\vlc.exe" ( set "vlcexe=%ProgramFiles%\VideoLAN\VLC\vlc.exe" )
+	endlocal & set "%~1=%vlcexe%" & exit /b
