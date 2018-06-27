@@ -1,19 +1,22 @@
 @echo off
 setlocal enableextensions disabledelayedexpansion
+if exist tv.cop (
+	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini
+)
 cls & set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
 call :getVLC vlcexe
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg2\ffmpeg.exe
 set canhbao="%vlcexe%" %voice_opt% %kenh%.mp3 ccl.mp3
-set batdau="%vlcexe%" %voice_opt% batdau.mp3
-set ketthuc="%vlcexe%" %voice_opt% ketthuc.mp3
+set batdau="%vlcexe%" %voice_opt% batdau.mp3 %kenh%.mp3
+set ketthuc="%vlcexe%" %voice_opt% ketthuc.mp3 %kenh%.mp3
 ::======================================
 for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] hetgio') do ( %%a )
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
 call :chongio hetgio spd cbq "%hetgio%"
-set /a stt_link=1
+set /a stt_link=0
 echo stop = %hetgio% > %kenh%.log
 ::======================================
 :start_record
@@ -21,7 +24,7 @@ if %stt_link% geq 5 (
 	for /l %%x in (1,1,5) do (
 		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[5]
 		%canhbao% )
-	set /a "stt_link = 1" )
+	set /a "stt_link = 0" )
 for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] link%stt_link%') do ( %%a )	
 call set streamurl=%%link%stt_link%%%
 if not "%streamurl%" == "" (

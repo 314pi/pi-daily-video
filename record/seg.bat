@@ -1,21 +1,21 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
-set del1=00:00:08
+set del1=00:00:00
 ::::::::::::::::: TEXT I
-set sub1=00:00:38
+set sub1=00:00:11
 ::::::::::::::::: P I
-set fil1=00:12:58
+set fil1=00:12:45
 ::::::::::::::::: QC I
-set adv1=00:17:34
+set adv1=00:14:21
 ::::::::::::::::: P II
-set fil2=00:31:59
+set fil2=00:14:21
 ::::::::::::::::: QC II
-set adv2=00:35:54
+set adv2=00:14:21
 ::::::::::::::::: P III
-set fil3=00:48:00
+set fil3=00:36:00
 :::::::::::::::::TEXT II -> END
-set sub2=00:48:40
+set sub2=00:36:18
 ::=================================
 set /a sub=1
 if %sub% equ 0 ( set "sub1=%del1%" & set "fil3=%sub2%" )
@@ -25,7 +25,7 @@ echo Separating Sengments ...
 "%ffmpeg%" -fflags +genpts -i %filename% -map 0 -c copy -segment_times %del1%,%sub1%,%fil1%,%adv1%,%fil2%,%adv2%,%fil3%,%sub2% -f segment -reset_timestamps 1 -v error seg%%d.ts
 if %sub% equ 0 goto IgSub
 ::=================================Set font size for SUB 1 and SUB 2
-set "subfont1=13" & set "subfont2=15"
+set "subfont1=11" & set "subfont2=13"
 set subtext1=-vf "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:y=10:fontsize=%subfont1%:fontcolor=white"
 set subtext2=-vf "drawtext=fontfile='arial_0.ttf':textfile=sub2.txt:x=(w-text_w)/2:y=10:fontsize=%subfont2%:fontcolor=white"
 ::================================= Make SUB 1

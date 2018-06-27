@@ -1,5 +1,8 @@
 @echo off 
-setlocal enabledelayedexpansion 
+setlocal enabledelayedexpansion
+if exist tv.cop (
+	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini
+)
 call :getVLC vlcexe
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 cls
@@ -26,7 +29,7 @@ for /l %%n in (0,1,%len%) do (
 	if !sec! equ [todaytv] 	set channel=todaytv.mp3
 	if !sec! equ [htv2] 	set channel=htv2.mp3
 	set /a "nolink = 0"
-	for /l %%i in (1,1,4) do (
+	for /l %%i in (0,1,4) do (
 		set key=link%%i
 		for /f "delims=" %%a in ('ini.exe tv.ini !sec! !key!') do (
 			%%a
@@ -34,16 +37,18 @@ for /l %%n in (0,1,%len%) do (
 			if not "!link!" == "" (
 				echo checking [!key!] ...
 				streamlink "!link!" | find /i "Available streams" || (
-					ini.exe tv.ini !sec! !key!==
 					set /a "nolink +=1"
-					echo [ remove this break url ]
+					if %%i geq 1 (
+						echo [ remove this break url ]
+						ini.exe tv.ini !sec! !key!== 
+					)
 				)
 			) else (
 				set /a "nolink += 1"
 			)
 		)
 	)
-	if !nolink! geq 4 (
+	if !nolink! geq 5 (
 		set canhbao="!vlcexe!" !voice_opt! !channel! ccl.mp3
 		!canhbao!
 	)
