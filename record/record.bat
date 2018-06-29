@@ -46,7 +46,7 @@ call :TimeSub dur "%hetgio%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur% -o %filename%
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
-echo streamlink "%streamurl%"  worst --hls-duration 00:01:00 >  %userprofile%\desktop\%kenh%_c.bat
+echo streamlink "%streamurl%"  worst >  %userprofile%\desktop\%kenh%_c.bat
 title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [spd=%spd%]
 ::%batdau%
 streamlink "%streamurl%" %streamopt%
