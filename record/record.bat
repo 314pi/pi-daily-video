@@ -7,7 +7,7 @@ cls & set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
 call :getVLC vlcexe
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
-set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg2\ffmpeg.exe
+set ffmpeg=%ProgramFiles(x86)%\Streamlink\ffmpeg\ffmpeg.exe
 set canhbao="%vlcexe%" %voice_opt% %kenh%.mp3 ccl.mp3
 set batdau="%vlcexe%" %voice_opt% batdau.mp3 %kenh%.mp3
 set ketthuc="%vlcexe%" %voice_opt% ketthuc.mp3 %kenh%.mp3
@@ -33,7 +33,7 @@ if not "%streamurl%" == "" (
 	if "x%streamurl:http=%" == "x%streamurl%" ( set /a "stt_link+=1" & goto start_record )
 	if not "x%streamurl:youtube=%" == "x%streamurl%" ( set qual=360p ) else ( set qual=worst )
 ) else ( set /a "stt_link+=1" & goto start_record )
-set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.ts
+set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set filename=%filename: =%
 ::=========================================
 call :getTime now
@@ -44,13 +44,13 @@ streamlink "%streamurl%" | find /i "Available streams" || (
 call :getTime now
 call :TimeSub dur "%hetgio%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
-set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur% -o %filename%
+set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
+set ffopt=-filter:v "setpts=1/%spd%*PTS" -filter:a "atempo=%spd%" -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
 echo streamlink "%streamurl%"  worst >  %userprofile%\desktop\%kenh%_c.bat
 title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [spd=%spd%]
 ::%batdau%
-streamlink "%streamurl%" %streamopt%
-
+streamlink "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
 call :getTime now
 if "%now%" leq "%hetgio%" (
 	goto :start_record

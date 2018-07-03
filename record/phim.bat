@@ -1,6 +1,6 @@
 @echo off
-set input=filegoc.ts
-set output=phim.ts
-set ffmpeg=C:\Program Files (x86)\Streamlink\ffmpeg2\ffmpeg.exe
+set input=filegoc.mp4
+set output=phim.mp4
+set ffmpeg=%ProgramFiles(x86)%\Streamlink\ffmpeg\ffmpeg.exe
 ::=====================
-"%ffmpeg%" -i "%input%" -ss 00:00:00 -to 01:57:07 -movflags faststart -fflags +genpts -v error -vcodec copy -acodec copy "%output%"
+"%ffmpeg%" -i "%input%" -ss 00:17:24 -to 01:55:09 -movflags faststart -fflags +genpts -v error -vcodec copy -acodec copy "%output%
