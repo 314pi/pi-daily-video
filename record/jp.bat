@@ -4,11 +4,9 @@ cls
 set simple=%1
 if [%simple%]==[] set simple=1
 ::==================================================================
-set ffprobe=%ProgramFiles(x86)%\Streamlink\ffmpeg\ffprobe.exe
-set ffmpeg=%ProgramFiles(x86)%\Streamlink\ffmpeg\ffmpeg.exe
+call apps.bat
 set name=%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set name=%name: =% 
-
 ::==================================================================
 if exist p4j.txt del p4j.txt
 copy NUL p4j.txt

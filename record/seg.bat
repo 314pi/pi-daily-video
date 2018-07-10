@@ -3,20 +3,19 @@ setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
 set del1=00:00:08
 ::::::::::::::::: P I
-set fil1=00:13:44
-::::::::::::::::: QC I
-set adv1=00:18:44
+set fil1=00:01:44
+set adv1=00:02:44
 ::::::::::::::::: P II
-set fil2=00:32:15
-::::::::::::::::: QC II
-set adv2=00:36:05
+set fil2=00:04:15
+set adv2=00:05:05
 ::::::::::::::::: P III
-set sub2=00:50:28
+set sub2=00:06:28
 ::=================================
 set tap=185
 set subpos=br
 set /a sub=1
 set thumb=tdqmm.jpg
+call apps.bat
 call :TTN del1 %del1%
 call :TTN fil1 %fil1%
 call :TTN adv1 %adv1%
@@ -31,7 +30,6 @@ if "%subpos%" == "tl" set postr=x=10:y=10
 if "%subpos%" == "br" set postr=x=w-tw-10:y=h-th-10
 if "%subpos%" == "bl" set postr=x=10:y=h-th-10
 set filename=phim.mp4
-set ffmpeg=%ProgramFiles(x86)%\Streamlink\ffmpeg\ffmpeg.exe
 ::"%ffmpeg%" -loop 1 -i %thumb% -vf "drawtext=fontfile='arial_0.ttf':text='TAP %tap%':x=w-tw-15:y=15:fontsize=50:fontcolor=red" -c:v libx264 -t 2 -pix_fmt yuv420p -y thumb.mp4
 title [sub: %sub%] - [pos: %subpos%] - [tap: %tap%]
 echo Separating Sengments ...
