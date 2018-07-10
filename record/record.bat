@@ -1,18 +1,32 @@
 @echo off
 setlocal enableextensions disabledelayedexpansion
+set scriptpath=%~dp0
+set scriptpath=%scriptpath:~0,-1%
+echo %scriptpath%
+if not "x%PROCESSOR_ARCHITECTURE:64=%" == "x%PROCESSOR_ARCHITECTURE%" ( 
+	set ffmpeg=%scriptpath%\streamlink\ffmpeg64\ffmpeg.exe
+	set ffprobe=%scriptpath%\streamlink\ffmpeg64\ffprobe.exe
+	set ffplay=%scriptpath%\streamlink\ffmpeg64\ffplay.exe
+	set vlc=%scriptpath%\streamlink\vlc64\vlc.exe
+	set ini=ini64.exe
+) else (
+	set ffmpeg=%scriptpath%\streamlink\ffmpeg32\ffmpeg.exe
+	set ffprobe=%scriptpath%\streamlink\ffmpeg32\ffprobe.exe
+	set ffplay=%scriptpath%\streamlink\ffmpeg32\ffplay.exe
+	set vlc=%scriptpath%\streamlink\vlc32\vlc.exe
+	set ini=ini32.exe
+)
 if exist tv.cop (
 	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini
 )
 cls & set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
-call :getVLC vlcexe
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
-set ffmpeg=%ProgramFiles(x86)%\Streamlink\ffmpeg\ffmpeg.exe
-set canhbao="%vlcexe%" %voice_opt% %kenh%.mp3 ccl.mp3
-set batdau="%vlcexe%" %voice_opt% batdau.mp3 %kenh%.mp3
-set ketthuc="%vlcexe%" %voice_opt% ketthuc.mp3 %kenh%.mp3
+set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
+set batdau="%vlc%" %voice_opt% batdau.mp3 %kenh%.mp3
+set ketthuc="%vlc%" %voice_opt% ketthuc.mp3 %kenh%.mp3
 ::======================================
-for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] hetgio') do ( %%a )
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] hetgio') do ( %%a )
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
 call :chongio hetgio spd cbq "%hetgio%"
@@ -25,7 +39,7 @@ if %stt_link% geq 5 (
 		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[5]
 		%canhbao% )
 	set /a "stt_link = 0" )
-for /f "delims=" %%a in ('ini.exe tv.ini [%kenh%] link%stt_link%') do ( %%a )	
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%stt_link%') do ( %%a )	
 call set streamurl=%%link%stt_link%%%
 if not "%streamurl%" == "" (
 	set "streamurl=%streamurl: =%"
@@ -45,7 +59,7 @@ call :getTime now
 call :TimeSub dur "%hetgio%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
-set ffopt=-filter:v "setpts=1/%spd%*PTS" -filter:a "atempo=%spd%" -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+set ffopt=-f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
 echo streamlink "%streamurl%"  worst >  %userprofile%\desktop\%kenh%_c.bat
 title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [spd=%spd%]
@@ -163,10 +177,3 @@ goto :eof
 	if %phut% lss 10 set phut=0%phut%
 	if %giay% lss 10 set giay=0%giay%
 	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%" & exit /b
-	
-:getVLC vlcexe
-	@echo off 
-	setlocal enabledelayedexpansion
-	if exist "%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe" ( set "vlcexe=%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe" )
-	if exist "%ProgramFiles%\VideoLAN\VLC\vlc.exe" ( set "vlcexe=%ProgramFiles%\VideoLAN\VLC\vlc.exe" )
-	endlocal & set "%~1=%vlcexe%" & exit /b

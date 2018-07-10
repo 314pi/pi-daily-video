@@ -1,0 +1,4 @@
+http://download.videolan.org/pub/videolan/vlc/3.0.3/win64/
+https://github.com/streamlink/streamlink-portable/releases
+https://ffmpeg.zeranoe.com/builds/
+http://www.horstmuc.de/wbat32.htm#inifile
