@@ -3,17 +3,17 @@ setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
 set del1=00:00:08
 ::::::::::::::::: P I
-set fil1=00:15:04
+set fil1=00:13:44
 ::::::::::::::::: QC I
-set adv1=00:15:54
+set adv1=00:18:44
 ::::::::::::::::: P II
-set fil2=00:28:50
+set fil2=00:32:15
 ::::::::::::::::: QC II
-set adv2=00:29:09
+set adv2=00:36:05
 ::::::::::::::::: P III
-set sub2=00:40:35
+set sub2=00:50:28
 ::=================================
-set tap=27
+set tap=185
 set subpos=br
 set /a sub=1
 set thumb=tdqmm.jpg

@@ -3,6 +3,7 @@ setlocal enableextensions disabledelayedexpansion
 set scriptpath=%~dp0
 set scriptpath=%scriptpath:~0,-1%
 echo %scriptpath%
+set streamlink=%scriptpath%\streamlink\Streamlink.exe
 if not "x%PROCESSOR_ARCHITECTURE:64=%" == "x%PROCESSOR_ARCHITECTURE%" ( 
 	set ffmpeg=%scriptpath%\streamlink\ffmpeg64\ffmpeg.exe
 	set ffprobe=%scriptpath%\streamlink\ffmpeg64\ffprobe.exe
@@ -19,7 +20,7 @@ if not "x%PROCESSOR_ARCHITECTURE:64=%" == "x%PROCESSOR_ARCHITECTURE%" (
 if exist tv.cop (
 	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini
 )
-cls & set "kenh=%1"
+cls & set "kenh=%1" & set "pad=%2"
 if [%kenh%]==[] set "kenh=test"
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
@@ -52,19 +53,25 @@ set filename=%filename: =%
 ::=========================================
 call :getTime now
 if "%now%" geq "%hetgio%" ( %ketthuc% & goto :eof )
-streamlink "%streamurl%" | find /i "Available streams" || (
+"%streamlink%" "%streamurl%" > ck.txt
+findstr /i "Available streams" < ck.txt || (
 	echo URL KHONG DUNG !
 	set /a "stt_link+=1" & goto start_record )
-call :getTime now
+del ck.txt
+	call :getTime now
 call :TimeSub dur "%hetgio%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
-set ffopt=-f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+if "%pad%" geq "pad" (
+	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=40:fontsize=20:fontcolor=white" -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+) else (
+	set ffopt=-f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+)
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
-echo streamlink "%streamurl%"  worst >  %userprofile%\desktop\%kenh%_c.bat
-title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [spd=%spd%]
+echo "%streamlink%" "%streamurl%"  worst >  %userprofile%\desktop\%kenh%_c.bat
+title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [pad: %pad%] - [spd=%spd%]
 ::%batdau%
-streamlink "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
+"%streamlink%" "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
 call :getTime now
 if "%now%" leq "%hetgio%" (
 	goto :start_record
