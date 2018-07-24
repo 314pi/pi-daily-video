@@ -1,10 +1,11 @@
 @echo off
 setlocal enableextensions disabledelayedexpansion
 call apps.bat
+if exist tv.dow (
+	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')" )
 if exist tv.cop (
-	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini
-)
-cls & set "kenh=%1" & set "pad=%2"
+	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini )
+cls & set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
@@ -14,7 +15,12 @@ set ketthuc="%vlc%" %voice_opt% ketthuc.mp3 %kenh%.mp3
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] hetgio') do ( %%a )
 if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
 if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
-call :chongio hetgio spd cbq "%hetgio%"
+call :chongio hetgio rcfg "%hetgio%"
+call :strlen %rcfg% cfgl
+if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
+::if %cfgl% geq 2 set /a tgio=%rcfg:~1,1%
+::if %cfgl% geq 5 set spd=%rcfg:~2,3%
+
 set /a stt_link=0
 echo stop = %hetgio% > %kenh%.log
 ::======================================
@@ -46,14 +52,19 @@ del ck.txt
 call :TimeSub dur "%hetgio%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
-if "%pad%" geq "pad" (
-	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=40:fontsize=20:fontcolor=white" -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+set tf=%%Hh%%Mp%%S
+if %pad% equ 1 (
+	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white" -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
 ) else (
 	set ffopt=-f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+	if %tgio% equ 1 (
+		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=white@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=black" %ffopt%
+	)
 )
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
-echo "%streamlink%" "%streamurl%"  worst >  %userprofile%\desktop\%kenh%_c.bat
-title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [pad: %pad%] - [spd=%spd%]
+echo "%streamlink%" "%streamurl%"  worst >  %userprofile%\desktop\%kenh%-v.bat
+echo "%streamlink%" "--player=%vlc%" "%streamurl%"  worst >  %scriptpath%\%kenh%-vlc.bat
+title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [pad=%pad%]
 ::%batdau%
 "%streamlink%" "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
 call :getTime now
@@ -64,10 +75,10 @@ if "%now%" leq "%hetgio%" (
 	%ketthuc% & goto :eof )
 goto :eof
 	
-:chongio gio spd cbq str
+:chongio gio rcfg str
 	@echo off
 	setlocal enableextensions enabledelayedexpansion
-	set "str=%~4"
+	set "str=%~3"
 	for /l %%i in (1,1,10) do (
 		call :tach giotach %%i
 		call :getTime now
@@ -76,9 +87,9 @@ goto :eof
 			goto :thay )
 	)
 	:thay
-	for /f "tokens=1-3 delims=x" %%a in ("%giotach%") do (
-		set "hetgio=%%a" & set "spd=%%b" & set "cbq=%%c" )
-	endlocal & set "%~1=%hetgio%" & set "%~2=%spd%" & set "%~3=%cbq%" & exit /b
+	for /f "tokens=1-2 delims=x" %%a in ("%giotach%") do (
+		set "hetgio=%%a" & set "rcfg=%%b" )
+	endlocal & set "%~1=%hetgio%" & set "%~2=%rcfg%" & exit /b
 
 :tach giotach stt
 	@echo off
@@ -168,3 +179,13 @@ goto :eof
 	if %phut% lss 10 set phut=0%phut%
 	if %giay% lss 10 set giay=0%giay%
 	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%" & exit /b
+
+:strlen string len
+setlocal enabledelayedexpansion
+set "token=#%~1" & set "len=0"
+for /L %%A in (12,-1,0) do (
+    set/A "len|=1<<%%A"
+    for %%B in (!len!) do if "!token:~%%B,1!"=="" set/A "len&=~1<<%%A"
+)
+EndLocal & set %~2=%len%
+exit/B
