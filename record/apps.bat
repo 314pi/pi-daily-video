@@ -14,8 +14,10 @@ if not "x%PROCESSOR_ARCHITECTURE:64=%" == "x%PROCESSOR_ARCHITECTURE%" (
 	set vlc=%scriptpath%\streamlink\vlc32\vlc.exe
 	set ini=ini32.exe
 )
+set tf=%%Hh%%Mp%%S
+set ffopt=
+set /a ctimesub=0
 :: Default Channel Configure
 set /a cfgl=0
 set /a pad=0
-set /a tgio=0
 set spd=1.0

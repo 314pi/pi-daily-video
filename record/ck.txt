@@ -1,0 +1,4 @@
+[Streamlink for Windows v0.14.0 - Git 4f5bb1e]
+[cli][info] Found matching plugin hls for URL https://talk2.vcdn.vn/hls/bf6b1e05cb8b26e2dc4324a9665dbfec/1640c34b355/meomeovtw/index.m3u8
+error: Unable to open URL: https://talk2.vcdn.vn/hls/bf6b1e05cb8b26e2dc4324a9665dbfec/1640c34b355/meomeovtw/index.m3u8 (410 Client Error: Gone for url: https://talk2.vcdn.vn/hls/bf6b1e05cb8b26e2dc4324a9665dbfec/1640c34b355/meomeovtw/index.m3u8)
+[End of Streamlink for Windows with ExitCode 1]

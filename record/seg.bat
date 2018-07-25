@@ -1,17 +1,17 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
-set del1=00:00:00
+set del1=00:09:35
 ::::::::::::::::: QC I
-set fil1=00:11:23
-set adv1=00:16:38
+set fil1=00:23:50
+set adv1=00:26:00
 ::::::::::::::::: QC II
-set fil2=00:29:40
-set adv2=00:34:08
+set fil2=00:26:00
+set adv2=00:26:00
 ::::::::::::::::: END
-set sub2=00:45:32
+set sub2=00:51:00
 ::=================================
-set tap=199
+set tap=TAP 34
 set subpos=tr
 set /a sub=1
 set thumb=tdqmm.jpg
@@ -30,7 +30,7 @@ if "%subpos%" == "tl" set postr=x=10:y=30
 if "%subpos%" == "br" set postr=x=w-tw-10:y=h-th-30
 if "%subpos%" == "bl" set postr=x=10:y=h-th-30
 set filename=phim.mp4
-::"%ffmpeg%" -loop 1 -i %thumb% -vf "drawtext=fontfile='arial_0.ttf':text='TAP %tap%':x=w-tw-15:y=15:fontsize=50:fontcolor=red" -c:v libx264 -t 2 -pix_fmt yuv420p -y thumb.mp4
+::"%ffmpeg%" -loop 1 -i %thumb% -vf "drawtext=fontfile='arial_0.ttf':text='%tap%':x=w-tw-15:y=15:fontsize=50:fontcolor=red" -c:v libx264 -t 2 -pix_fmt yuv420p -y thumb.mp4
 title [sub: %sub%] - [pos: %subpos%] - [tap: %tap%]
 echo Separating Sengments ...
 "%ffmpeg%" -fflags +genpts -i %filename% -map 0 -c copy -segment_times %del1%,%sub1%,%fil1%,%adv1%,%fil2%,%adv2%,%fil3%,%sub2% -f segment -reset_timestamps 1 -v error -y seg%%d.mp4
@@ -38,7 +38,11 @@ del seg0.mp4 seg3.mp4 seg5.mp4 seg8.mp4
 if %sub% equ 0 goto IgSub
 ::=================================Set font size for SUB 1 and SUB 2
 set "subfont1=11" & set "subfont2=13"
-set subtext1=-vf "[in]drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:y=5:fontsize=%subfont1%:fontcolor=white, drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:text='Tap %tap%':%postr%:fontsize=60:fontcolor=white[out]"
+if "x%tap:TAP=%" == "x%tap%" (
+	set subtext1=-vf "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:y=5:fontsize=%subfont1%:fontcolor=white"
+) else (
+	set subtext1=-vf "[in]drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:y=5:fontsize=%subfont1%:fontcolor=white, drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:text='%tap%':%postr%:fontsize=60:fontcolor=white[out]"
+)
 set subtext2=-vf "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub2.txt:x=(w-text_w)/2:y=5:fontsize=%subfont2%:fontcolor=white"
 ::================================= Make SUB 1
 echo Makeking SUB 1...

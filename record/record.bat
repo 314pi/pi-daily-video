@@ -12,23 +12,24 @@ set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
 set batdau="%vlc%" %voice_opt% batdau.mp3 %kenh%.mp3
 set ketthuc="%vlc%" %voice_opt% ketthuc.mp3 %kenh%.mp3
 ::======================================
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] hetgio') do ( %%a )
-if not "%hetgio%" == "" set "hetgio=%hetgio: =%"
-if "%hetgio%" == "" ( call :getStop hetgio 1 30 )
-call :chongio hetgio rcfg "%hetgio%"
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] ctimesub') do ( %%a )
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] pcfg') do ( %%a )
+if not "%pcfg%" == "" set "pcfg=%pcfg: =%"
+if "%pcfg%" == "" ( call :getStop pcfg 1 30 )
+call :chongio endtime rcfg "%pcfg%"
 call :strlen %rcfg% cfgl
 if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
-::if %cfgl% geq 2 set /a tgio=%rcfg:~1,1%
 ::if %cfgl% geq 5 set spd=%rcfg:~2,3%
 
 set /a stt_link=0
-echo stop = %hetgio% > %kenh%.log
+echo stop = %endtime% > %kenh%.log
 ::======================================
 :start_record
 if %stt_link% geq 5 (
 	for /l %%x in (1,1,5) do (
 		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[5]
-		%canhbao% )
+		if exist r.loa ( %canhbao% ) else ( timeout /t 1 > NUL )
+	)
 	set /a "stt_link = 0" )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%stt_link%') do ( %%a )	
 call set streamurl=%%link%stt_link%%%
@@ -42,37 +43,39 @@ set filename=%kenh%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set filename=%filename: =%
 ::=========================================
 call :getTime now
-if "%now%" geq "%hetgio%" ( %ketthuc% & goto :eof )
+if "%now%" geq "%endtime%" ( %ketthuc% & goto :eof )
 "%streamlink%" "%streamurl%" > ck.txt
 findstr /i "Available streams" < ck.txt || (
 	echo URL KHONG DUNG !
 	set /a "stt_link+=1" & goto start_record )
 del ck.txt
-	call :getTime now
-call :TimeSub dur "%hetgio%" "%now%"
+call :getTime now
+call :TimeSub dur "%endtime%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
-set tf=%%Hh%%Mp%%S
 if %pad% equ 1 (
-	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white" -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
+	type s1.txt > pad.txt
+	if %ctimesub% equ 1 ( echo . >> pad.txt & type t1.txt >> pad.txt )
+	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white"
 ) else (
-	set ffopt=-f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
-	if %tgio% equ 1 (
-		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=white@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=black" %ffopt%
-	)
+	if %ctimesub% equ 1 (
+		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=white" )
 )
+set ffopt=%ffopt% -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
 echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
 echo "%streamlink%" "%streamurl%"  worst >  %userprofile%\desktop\%kenh%-v.bat
 echo "%streamlink%" "--player=%vlc%" "%streamurl%"  worst >  %scriptpath%\%kenh%-vlc.bat
-title %kenh% - %time% / %hetgio% - URL[%stt_link%] - [%dur%] - [pad=%pad%]
-::%batdau%
+title %kenh% - %time% / %endtime% - URL[%stt_link%] - [%dur%] - [pad=%pad%] - [timesub=%ctimesub%]
+if exist r.loa ( %batdau% ) else ( timeout /t 1 > NUL )
 "%streamlink%" "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
 call :getTime now
-if "%now%" leq "%hetgio%" (
+if "%now%" leq "%endtime%" (
 	goto :start_record
 ) else (
 	echo [ %time% ] - [ KET THUC GHI ]  >> %kenh%.log
-	%ketthuc% & goto :eof )
+	if exist r.loa ( %ketthuc% ) else ( timeout /t 1 > NUL )
+	goto :eof 
+)
 goto :eof
 	
 :chongio gio rcfg str
@@ -88,8 +91,8 @@ goto :eof
 	)
 	:thay
 	for /f "tokens=1-2 delims=x" %%a in ("%giotach%") do (
-		set "hetgio=%%a" & set "rcfg=%%b" )
-	endlocal & set "%~1=%hetgio%" & set "%~2=%rcfg%" & exit /b
+		set "endtime=%%a" & set "rcfg=%%b" )
+	endlocal & set "%~1=%endtime%" & set "%~2=%rcfg%" & exit /b
 
 :tach giotach stt
 	@echo off
@@ -99,7 +102,7 @@ goto :eof
 	endlocal & if not "%~1"=="" set "%~1=%giotach%" & exit /b
 	
 :: Thoi gian thuc hien ghi Video
-:getStop hetgio gi ph
+:getStop pcfg gi ph
 	@echo off
 	setlocal enableextensions disabledelayedexpansion
 	if not "%~2"=="" (
