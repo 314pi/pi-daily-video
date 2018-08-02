@@ -1,19 +1,19 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
-set del1=00:09:35
+set del1=00:04:23
 ::::::::::::::::: QC I
-set fil1=00:23:50
-set adv1=00:26:00
+set fil1=00:17:00
+set adv1=00:17:34
 ::::::::::::::::: QC II
-set fil2=00:26:00
-set adv2=00:26:00
+set fil2=00:30:42
+set adv2=00:31:11
 ::::::::::::::::: END
-set sub2=00:51:00
+set sub2=00:45:33
 ::=================================
-set tap=TAP 34
+set tap=14
 set subpos=tr
-set /a sub=1
+set /a sub=0
 set thumb=tdqmm.jpg
 call apps.bat
 call :TTN del1 %del1%
@@ -39,9 +39,9 @@ if %sub% equ 0 goto IgSub
 ::=================================Set font size for SUB 1 and SUB 2
 set "subfont1=11" & set "subfont2=13"
 if "x%tap:TAP=%" == "x%tap%" (
-	set subtext1=-vf "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:y=5:fontsize=%subfont1%:fontcolor=white"
+	set subtext1=-vf "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:fontsize=%subfont1%:fontcolor=white"
 ) else (
-	set subtext1=-vf "[in]drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:y=5:fontsize=%subfont1%:fontcolor=white, drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:text='%tap%':%postr%:fontsize=60:fontcolor=white[out]"
+	set subtext1=-vf "[in]drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub1.txt:x=(w-text_w)/2:fontsize=%subfont1%:fontcolor=white, drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:text='%tap%':%postr%:fontsize=60:fontcolor=white[out]"
 )
 set subtext2=-vf "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:textfile=sub2.txt:x=(w-text_w)/2:y=5:fontsize=%subfont2%:fontcolor=white"
 ::================================= Make SUB 1
@@ -71,7 +71,7 @@ del p4j.txt
 
 goto :eof
 
-: TTN num time
+:TTN num time
 	setlocal enableextensions disabledelayedexpansion
 	if "%~2"=="" ( set "yy=%time%" ) else ( set "yy=%~2" )
 	set /a h=100%yy:~0,2% %% 100

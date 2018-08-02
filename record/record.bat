@@ -1,18 +1,10 @@
-@echo off
+::@echo off
 setlocal enableextensions disabledelayedexpansion
 call apps.bat
-if exist tv.dow (
-	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')" )
-if exist tv.cop (
-	if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini )
-cls & set "kenh=%1"
+set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
-set "voice_opt=-I dummy --play-and-exit --volume 1024"
-set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
-set batdau="%vlc%" %voice_opt% batdau.mp3 %kenh%.mp3
-set ketthuc="%vlc%" %voice_opt% ketthuc.mp3 %kenh%.mp3
 ::======================================
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] ctimesub') do ( %%a )
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] plogo') do ( %%a )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] pcfg') do ( %%a )
 if not "%pcfg%" == "" set "pcfg=%pcfg: =%"
 if "%pcfg%" == "" ( call :getStop pcfg 1 30 )
@@ -22,14 +14,16 @@ if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
 ::if %cfgl% geq 5 set spd=%rcfg:~2,3%
 
 set /a stt_link=0
-echo stop = %endtime% > %kenh%.log
+if %rlog% equ 1 ( echo stop = %endtime% > %kenh%.log )
 ::======================================
 :start_record
 if %stt_link% geq 5 (
 	for /l %%x in (1,1,5) do (
 		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[5]
-		if exist r.loa ( %canhbao% ) else ( timeout /t 1 > NUL )
+		if %spk% equ 1 ( %canhbao% ) else ( timeout /t 1 > NUL )
 	)
+	echo Downloading TV.INI ...
+	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 	set /a "stt_link = 0" )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%stt_link%') do ( %%a )	
 call set streamurl=%%link%stt_link%%%
@@ -53,28 +47,31 @@ call :getTime now
 call :TimeSub dur "%endtime%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
-if %pad% equ 1 (
+if %pad% geq 1 (
 	type s1.txt > pad.txt
-	if %ctimesub% equ 1 ( echo . >> pad.txt & type t1.txt >> pad.txt )
+	if %plogo% geq 1 ( echo . >> pad.txt & type t1.txt >> pad.txt )
 	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white"
 ) else (
-	if %ctimesub% equ 1 (
-		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1: boxcolor=black@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=white" )
+	if %plogo% equ 1 (
+		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1:boxcolor=black@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=white" ) 
+	if %plogo% equ 2 (
+		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:fontsize=10:fontcolor=white" ) 	
 )
 set ffopt=%ffopt% -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
-echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
-echo "%streamlink%" "%streamurl%"  worst >  %userprofile%\desktop\%kenh%-v.bat
-echo "%streamlink%" "--player=%vlc%" "%streamurl%"  worst >  %scriptpath%\%kenh%-vlc.bat
-title %kenh% - %time% / %endtime% - URL[%stt_link%] - [%dur%] - [pad=%pad%] - [timesub=%ctimesub%]
-if exist r.loa ( %batdau% ) else ( timeout /t 1 > NUL )
+if %rlog% equ 1 ( 
+	echo [ %time% ]-URL[%stt_link%]=%streamurl% >> %kenh%.log
+	echo "%streamlink%" "%streamurl%" worst > %userprofile%\desktop\%kenh%-v.bat
+	echo "%streamlink%" "--player=%vlc%" "%streamurl%" worst > %scriptpath%\%kenh%-vlc.bat )
+title %kenh% - %time% / %endtime% - URL[%stt_link%] - [%dur%] - [pad=%pad%] - [logo=%plogo%]
+if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 > NUL )
 "%streamlink%" "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
 call :getTime now
 if "%now%" leq "%endtime%" (
 	goto :start_record
 ) else (
-	echo [ %time% ] - [ KET THUC GHI ]  >> %kenh%.log
-	if exist r.loa ( %ketthuc% ) else ( timeout /t 1 > NUL )
-	goto :eof 
+	if %rlog% equ 1  ( echo [ %time% ] - [ KET THUC GHI ] >> %kenh%.log )
+	if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 > NUL )
+	goto :eof
 )
 goto :eof
 	
@@ -127,38 +124,32 @@ goto :eof
 	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%,00x0x1" & exit /b
 
 :: getTime
-::    This routine returns the current (or passed as argument) time
-::    in the form hh:mm:ss,cc in 24h format, with two digits in each
-::    of the segments, 0 prefixed where needed.
+:: This routine returns the current (or passed as argument) time
+:: in the form hh:mm:ss,cc in 24h format, with two digits in each
+:: of the segments, 0 prefixed where needed.
 :getTime returnVar [time]
-    setlocal enableextensions disabledelayedexpansion
-
-    :: Retrieve parameters if present. Else take current time
-    if "%~2"=="" ( set "t=%time%" ) else ( set "t=%~2" )
-
-    :: Test if time contains "correct" (usual) data. Else try something else
-    echo(%t%|findstr /i /r /x /c:"[0-9:,.apm -]*" >nul || (
-        set "t="
-        for /f "tokens=2" %%a in ('2^>nul robocopy "|" . /njh') do (
-            if not defined t set "t=%%a,00"
-        )
-        rem If we do not have a valid time string, leave
-        if not defined t exit /b
-    )
-
-    :: Check if 24h time adjust is needed
-    if not "%t:pm=%"=="%t%" (set "p=12" ) else (set "p=0")
-
-    :: Separate the elements of the time string
-    for /f "tokens=1-5 delims=:.,-PpAaMm " %%a in ("%t%") do (
-        set "h=%%a" & set "m=00%%b" & set "s=00%%c" & set "c=00%%d"
-    )
-
-    :: Adjust the hour part of the time string
-    set /a "h=100%h%+%p%"
-
-    :: Clean up and return the new time string
-    endlocal & if not "%~1"=="" set "%~1=%h:~-2%:%m:~-2%:%s:~-2%,%c:~-2%" & exit /b
+	setlocal enableextensions disabledelayedexpansion
+	:: Retrieve parameters if present. Else take current time
+	if "%~2"=="" ( set "t=%time%" ) else ( set "t=%~2" )
+	:: Test if time contains "correct" (usual) data. Else try something else
+	echo(%t%|findstr /i /r /x /c:"[0-9:,.apm -]*" >nul || (
+		set "t="
+		for /f "tokens=2" %%a in ('2^>nul robocopy "|" . /njh') do (
+			if not defined t set "t=%%a,00"
+		)
+		rem If we do not have a valid time string, leave
+		if not defined t exit /b
+	)
+	:: Check if 24h time adjust is needed
+	if not "%t:pm=%"=="%t%" (set "p=12" ) else (set "p=0")
+	:: Separate the elements of the time string
+	for /f "tokens=1-5 delims=:.,-PpAaMm " %%a in ("%t%") do (
+		set "h=%%a" & set "m=00%%b" & set "s=00%%c" & set "c=00%%d"
+	)
+	:: Adjust the hour part of the time string
+	set /a "h=100%h%+%p%"
+	:: Clean up and return the new time string
+	endlocal & if not "%~1"=="" set "%~1=%h:~-2%:%m:~-2%:%s:~-2%,%c:~-2%" & exit /b
 
 : TimeSub st xx yy
 	setlocal enableextensions disabledelayedexpansion
@@ -184,11 +175,11 @@ goto :eof
 	endlocal & if not "%~1"=="" set "%~1=%gio%:%phut%:%giay%" & exit /b
 
 :strlen string len
-setlocal enabledelayedexpansion
-set "token=#%~1" & set "len=0"
-for /L %%A in (12,-1,0) do (
-    set/A "len|=1<<%%A"
-    for %%B in (!len!) do if "!token:~%%B,1!"=="" set/A "len&=~1<<%%A"
-)
-EndLocal & set %~2=%len%
-exit/B
+	setlocal enabledelayedexpansion
+	set "token=#%~1" & set "len=0"
+	for /L %%A in (12,-1,0) do (
+		set/A "len|=1<<%%A"
+		for %%B in (!len!) do if "!token:~%%B,1!"=="" set/A "len&=~1<<%%A"
+	)
+	endlocal & set %~2=%len%
+	exit /b

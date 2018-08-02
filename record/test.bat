@@ -1,16 +1,17 @@
 @echo off
-set /p "input=Enter text: "
-call :strlen "%input%", len
-echo Length is %len%
-echo %input%
-exit/B
-
-:strlen string len
-setlocal enabledelayedexpansion
-set "token=#%~1" & set "len=0"
-for /L %%A in (12,-1,0) do (
-    set/A "len|=1<<%%A"
-    for %%B in (!len!) do if "!token:~%%B,1!"=="" set/A "len&=~1<<%%A"
+call apps.bat
+type NUL > "%scriptpath%\tmp\blank.txt"
+set chanelurl="http://data.xemtiviso.com/live/vtv/vtv1.php"
+%wget% -qO- %chanelurl% > "%scriptpath%\tmp\src.txt"
+%grep% -Eo "function init" "%scriptpath%\tmp\src.txt" > NUL
+if %errorlevel% equ 0 (
+	%grep% -Eo "'http[^\,]+'" "%scriptpath%\tmp\src.txt" > "%scriptpath%\tmp\quotes.txt"
+	%sed% "s/'//g" "%scriptpath%\tmp\quotes.txt" > "%scriptpath%\tmp\lnk.txt"
+	for /f %%i in (%scriptpath%\tmp\lnk.txt) do (
+		%wget% -qO- "%%i" >> "%scriptpath%\tmp\blank.txt"
+		echo. >> "%scriptpath%\tmp\blank.txt"
+	)
+) else (
+	echo May be YOUTUBE
 )
-EndLocal & set %~2=%len%
-exit/B
+%sed% "/^\s*$/d" "%scriptpath%\tmp\blank.txt" > "m3u8.txt"
