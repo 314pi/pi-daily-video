@@ -1,5 +1,4 @@
 @echo off
-cls
 set scriptpath=%~dp0
 set scriptpath=%scriptpath:~0,-1%
 set streamlink="%scriptpath%\streamlink\Streamlink.exe"
@@ -18,8 +17,8 @@ if not "x%PROCESSOR_ARCHITECTURE:64=%" == "x%PROCESSOR_ARCHITECTURE%" (
 	set wget="%scriptpath%\streamlink\wget\wget32.exe"
 	set ini=ini32.exe
 )
-set sed="C:\Program Files (x86)\GnuWin32\bin\sed.exe"
-set grep="C:\Program Files (x86)\GnuWin32\bin\grep.exe"
+set sed="%scriptpath%\streamlink\GnuWin32\bin\sed.exe"
+set grep="%scriptpath%\streamlink\GnuWin32\bin\grep.exe"
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
 set batdau="%vlc%" %voice_opt% batdau.mp3 %kenh%.mp3
