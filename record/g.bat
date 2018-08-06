@@ -4,7 +4,7 @@ call apps.bat
 set lims[0]=700
 set lims[1]=1000
 set lims[2]=1300
-set limsets[0]=360p 720k 1000k
+set limsets[0]=360p 720k
 set limsets[1]=480p 540p
 set limsets[2]=720p 2160k
 set /a limc=0
@@ -24,7 +24,7 @@ if %stt% geq 11 set /a stt=1
 :GetLink1
 if %stt% geq 11 ( 
 	set /a limc+=1
-	goto ChangeLim
+	goto :ChangeLim
 )
 if exist .\tmp\%kenh%.* del "%scriptpath%\tmp\%kenh%.*"
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] source%stt%') do ( %%a )
@@ -32,7 +32,7 @@ call set source="%%source%stt%%%"
 if not %source% == "" set source=%source: =%
 if %source% == "" (
 	set /a stt+=1
-	goto GetLink1 )
+	goto :GetLink1 )
 echo ==========================================================
 echo Source [%stt%]: %source%
 type NUL > "%scriptpath%\tmp\%kenh%.4"
@@ -64,18 +64,18 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 			!ini! tv.ini [!kenh!] link!count!=%%i
 			!ini! tv.ini [!kenh!] resolution=!limset!
 			set /a "count+=1"
-			goto NextLink
+			goto :NextLink
 		)
 		call :GetRes res %%i
 		if !res! leq !lim! (
-			echo [ FFprobe found resolution !res! ] ^< [ lim=!lim! ] - OK [ Base on FFprobe ]
+			echo [ Ffmpeg found resolution !res! ] ^< [ lim=!lim! ] - OK [ Base on Ffmpeg ]
 			!ini! tv.ini [!kenh!] link!count!=%%i
 			!ini! tv.ini [!kenh!] resolution=!res!
 			set /a "count+=1"
 		) else (
-			echo [ FFprobe found resolution !res! ] ^> [ lim=!lim! ] - Do not use this link
+			echo [ Ffmpeg found resolution !res! ] ^> [ lim=!lim! ] - Do not use this link
 		)
-		goto NextLink
+		goto :NextLink
 	)
 	echo Streamlink can not use this link for record
 	:NextLink
@@ -83,7 +83,7 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 )
 if %count% equ 1 (
 	set /a stt+=1
-	goto GetLink1 )
+	goto :GetLink1 )
 ::if exist .\tmp\%kenh%.* del "%scriptpath%\tmp\%kenh%.*"
 endlocal
 goto :eof

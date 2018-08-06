@@ -12,6 +12,7 @@ call :chongio endtime rcfg "%pcfg%"
 call :strlen %rcfg% cfgl
 if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
 ::if %cfgl% geq 5 set spd=%rcfg:~2,3%
+if %getlinkfirst% equ 0 ( goto NoGetLink )
 set /a src_count=1
 :GetLink
 if %src_count% geq 5 (
@@ -24,6 +25,7 @@ if %src_count% geq 5 (
 	set /a "src_count=1" )
 call getlink.bat %kenh% %src_count%
 
+:NoGetLink
 set /a link_count=1
 if %rlog% equ 1 ( echo stop = %endtime% > %kenh%.log )
 ::======================================

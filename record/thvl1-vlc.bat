@@ -1,1 +1,1 @@
-"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "http://talk2.vcdn.vn/hls/65672f7e952912179a3df010d54cd9c1/16503176e32/khongcantoi/index.m3u8" worst  
+"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "http://live2.thvli.vn/4c28f1f08155eb303e0f7f99de56e3bb1533556043/live/thvl1hd.m3u8" worst  

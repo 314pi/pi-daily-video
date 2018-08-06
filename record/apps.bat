@@ -28,10 +28,12 @@ for /f "delims=" %%a in ('%ini% my.ini [configure] spk') do ( %%a )
 for /f "delims=" %%a in ('%ini% my.ini [configure] copyini') do ( %%a )
 for /f "delims=" %%a in ('%ini% my.ini [configure] downloadini') do ( %%a )
 for /f "delims=" %%a in ('%ini% my.ini [configure] rlog') do ( %%a )
+for /f "delims=" %%a in ('%ini% my.ini [configure] getlinkfirst') do ( %%a )
 if not defined spk set /a spk=0
 if not defined copyini set /a copyini=0
 if not defined downloadini set /a downloadini=0
 if not defined rlog set /a rlog=0
+if not defined getlinkfirst set /a getlinkfirst=1
 if %downloadini% equ 1 (
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 ) else (
