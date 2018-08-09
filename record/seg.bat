@@ -1,20 +1,20 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
-set del1=00:36:25
+set del1= 00:40:50
 ::::::::::::::::: QC I
-set fil1=00:56:38
-set adv1=00:59:20
+set fil1= 00:58:58
+set adv1= 01:01:32
 ::::::::::::::::: QC II
-set fil2=01:18:03
-set adv2=01:18:10
+set fil2= 01:01:32
+set adv2= 01:01:32
 ::::::::::::::::: END
-set sub2=01:19:15
+set sub2= 01:18:49
 ::=================================
-set tap=211
+set tap= 18
 set subpos=tr
 set /a sub=0
-set thumb=tdqmm.jpg
+set thumb= tdqmm.jpg
 call apps.bat
 call :TTN del1 %del1%
 call :TTN fil1 %fil1%

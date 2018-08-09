@@ -34,6 +34,7 @@ if not defined copyini set /a copyini=0
 if not defined downloadini set /a downloadini=0
 if not defined rlog set /a rlog=0
 if not defined getlinkfirst set /a getlinkfirst=1
+:DownLoad
 if %downloadini% equ 1 (
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 ) else (
@@ -41,13 +42,18 @@ if %downloadini% equ 1 (
 		if exist z:\tv.ini copy /y z:\tv.ini .\tv.ini )
 	)
 )
+if not exist "%scriptpath%\tmp" md "%scriptpath%\tmp"
+if not exist "%scriptpath%\log" md "%scriptpath%\log"
 if not exist tv.ini (
-	title Khong Ghi Duoc VIDEO [Khong Co File TV.INI]
-	echo Khong Ghi Duoc VIDEO [Khong Co File TV.INI] 
-	pause )
+	title [ TV.INI not founud ]
+	echo [ TV.INI not founud ] Going to download in ...
+	timeout /t 10 
+	set /a downloadini=1
+	goto DownLoad )
 ::============================
 set tf=%%Hh%%Mp%%S
 set ffopt=
+set preset=
 set /a plogo=0
 :: Default Channel Configure
 set /a cfgl=0

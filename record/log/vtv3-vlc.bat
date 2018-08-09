@@ -1,0 +1,1 @@
+"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "http://talk2.vcdn.vn/hls/59b4e781b524b6831bc8f306074522c6/1651c681d33/choikhonhau/index.m3u8" worst  

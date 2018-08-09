@@ -24,10 +24,11 @@ if %src_count% geq 5 (
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 	set /a "src_count=1" )
 call getlink.bat %kenh% %src_count%
+timeout /t 5
 
 :NoGetLink
 set /a link_count=1
-if %rlog% equ 1 ( echo stop = %endtime% > %kenh%.log )
+if %rlog% equ 1 ( echo stop = %endtime% > "%scriptpath%\log\%kenh%.log" )
 ::======================================
 :start_record
 if %link_count% geq 5 (
@@ -48,11 +49,11 @@ set filename=%filename: =%
 ::=========================================
 call :getTime now
 if "%now%" geq "%endtime%" ( %ketthuc% & goto :eof )
-%streamlink% "%streamurl%" > ck.txt
-findstr /i "Available streams" < ck.txt || (
-	echo URL KHONG DUNG !
+%streamlink% "%streamurl%" > "%scriptpath%\log\ck.txt"
+findstr /i /C:"Available streams" < "%scriptpath%\log\ck.txt" || (
+	echo Streamlink can not use this link for record [ record.bat ]
 	set /a "link_count+=1" & goto start_record )
-del ck.txt
+del "%scriptpath%\log\ck.txt"
 call :getTime now
 call :TimeSub dur "%endtime%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
@@ -63,16 +64,19 @@ if %pad% geq 1 (
 	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white"
 ) else (
 	if %plogo% equ 1 (
-		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1:boxcolor=black@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=white" ) 
+		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1:boxcolor=black@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=white" )
 	if %plogo% equ 2 (
 		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:fontsize=10:fontcolor=white" ) 	
 )
-set ffopt=%ffopt% -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe
-if %rlog% equ 1 ( 
-	echo [ %time% ]-URL[%link_count%]=%streamurl% >> %kenh%.log
-	echo %streamlink% "%streamurl%" worst > %userprofile%\desktop\%kenh%-v.bat
-	echo %streamlink% "--player=%vlc%" "%streamurl%" worst > %scriptpath%\%kenh%-vlc.bat )
-title %kenh% - %time% / %endtime% - URL[%link_count%] - [%dur%] - [pad=%pad%] - [logo=%plogo%] - [res=%resolution%]
+echo %resolution% > "%scriptpath%\tmp\%kenh%.10"
+findstr /i "720p 1280 2160k" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v superfast )
+findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v veryfast )
+set ffopt=%ffopt% -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe %preset%
+if %rlog% equ 1 (
+	echo [ %time% ]-URL[%link_count%]=%streamurl% >> "%scriptpath%\log\%kenh%.log"
+	echo %streamlink% "%streamurl%" worst > "%userprofile%\desktop\%kenh%-v.bat"
+	echo %streamlink% "--player=%vlc%" "%streamurl%" worst > "%scriptpath%\log\%kenh%-vlc.bat" )
+title %kenh% - %time% / %endtime% - URL[%link_count%] - [%dur%] - [res=%resolution% =^> %preset%] - [pad=%pad%] - [logo=%plogo%]
 if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 > NUL )
 %ffprobe% -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0 "%streamurl%"
 %streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
@@ -80,7 +84,7 @@ call :getTime now
 if "%now%" leq "%endtime%" (
 	goto :start_record
 ) else (
-	if %rlog% equ 1  ( echo [ %time% ] - [ KET THUC GHI ] >> %kenh%.log )
+	if %rlog% equ 1 ( echo [ %time% ] - [ Stop record ] [ record.bat ] >> "%scriptpath%\log\%kenh%.log" )
 	if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 > NUL )
 	goto :eof
 )

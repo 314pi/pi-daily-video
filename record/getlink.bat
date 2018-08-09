@@ -15,14 +15,13 @@ if %limc% geq 3 (
 	goto :eof )
 set /a lim=lims[%limc%]
 set limset=!limsets[%limc%]!
-title [lim=%lim%]
 set "kenh=%1"
 set "stt=%2"
 if [%kenh%]==[] set "kenh=test"
 if [%stt%]==[] set /a stt=1
 if %stt% geq 11 set /a stt=1
 :GetLink1
-if %stt% geq 11 ( 
+if %stt% geq 11 (
 	set /a limc+=1
 	goto ChangeLim
 )
@@ -33,33 +32,63 @@ if not %source% == "" set source=%source: =%
 if %source% == "" (
 	set /a stt+=1
 	goto GetLink1 )
+title [%kenh%] - [lim=%lim%]
 echo ==========================================================
 echo Source [%stt%]: %source%
-type NUL > "%scriptpath%\tmp\%kenh%.4"
-%wget% -qO- %source% > "%scriptpath%\tmp\%kenh%.1"
-%grep% -Eo "http[^\,]+m3u8" "%scriptpath%\tmp\%kenh%.1" > "%scriptpath%\tmp\%kenh%.2" && (
+type NUL>"%scriptpath%\tmp\%kenh%.4"
+%wget% -qO- %source%>"%scriptpath%\tmp\%kenh%.1"
+%grep% -Eo "http[^\,]+m3u8" "%scriptpath%\tmp\%kenh%.1">"%scriptpath%\tmp\%kenh%.2" && (
 	echo Type 1 [ http://-- m3u8 ]
-	copy "%scriptpath%\tmp\%kenh%.2" "%scriptpath%\tmp\%kenh%.4" > NUL
+	call :RemDup "%scriptpath%\tmp\%kenh%.2"
+	copy "%scriptpath%\tmp\%kenh%.2" "%scriptpath%\tmp\%kenh%.4">NUL
 )
-%grep% -Eo "function init" "%scriptpath%\tmp\%kenh%.1" > NUL && (
+%grep% -Eo "function init" "%scriptpath%\tmp\%kenh%.1">NUL && (
 	echo Type 2 [ function init ]
-	%grep% -Eo "'http[^\,]+'" "%scriptpath%\tmp\%kenh%.1" > "%scriptpath%\tmp\%kenh%.2"
-	%sed% "s/'//g" "%scriptpath%\tmp\%kenh%.2" > "%scriptpath%\tmp\%kenh%.3"
-	for /f %%i in (%scriptpath%\tmp\%kenh%.3) do (
-		%wget% -qO- "%%i" >> "%scriptpath%\tmp\%kenh%.4"
-		echo. >> "%scriptpath%\tmp\%kenh%.4" )
-)
-%sed% "/^\s*$/d" "%scriptpath%\tmp\%kenh%.4" > "%scriptpath%\tmp\%kenh%.5"
-%sed% "s/ //g" "%scriptpath%\tmp\%kenh%.5" > "%scriptpath%\tmp\%kenh%.6"
-%grep% -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.6" > "%scriptpath%\tmp\%kenh%.0"
+	%grep% -Eo "'http[^\,]+'" "%scriptpath%\tmp\%kenh%.1">"%scriptpath%\tmp\%kenh%.2"
+	%sed% "s/'//g" "%scriptpath%\tmp\%kenh%.2">"%scriptpath%\tmp\%kenh%.3"
+	call :RemDup "%scriptpath%\tmp\%kenh%.3"
+	%sed% "s/ //g" "%scriptpath%\tmp\%kenh%.3">"%scriptpath%\tmp\%kenh%.31"
+	set /a lcount=0
+	for /f %%i in (%scriptpath%\tmp\%kenh%.31) do (
+		set /a ltype=0
+		echo %%i>"%scriptpath%\tmp\%kenh%.32"
+		!grep! -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.32">NUL && (
+			set /a lcount+=1
+			echo [Class 1 No. !lcount! ] %%i
+			echo %%i>>"%scriptpath%\tmp\%kenh%.4"
+			set /a ltype=1 )
+		if !ltype! equ 0 (
+			!wget! -qO- "%%i">"%scriptpath%\tmp\%kenh%.33"
+			!sed! "s/ //g" "%scriptpath%\tmp\%kenh%.33">"%scriptpath%\tmp\%kenh%.34"
+			!grep! -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.34">NUL && (
+				set /a lcount+=1
+				echo [Class 2 No. !lcount! ] %%i
+				set /a ltype=2
+				set /p type2=<"%scriptpath%\tmp\%kenh%.34"
+				echo !type2!>>"%scriptpath%\tmp\%kenh%.4"
+			)
+		)
+		REM if !ltype! equ 0 (
+			REM !wget! -qO- "%%i">"%scriptpath%\tmp\%kenh%.35"
+			REM set /p type3=<"%scriptpath%\tmp\%kenh%.35"
+			REM !wget! -qO- !type3!>"%scriptpath%\tmp\%kenh%.36"
+			REM %grep% -Eo "http[^\,]+" "%scriptpath%\tmp\%kenh%.36">>"%scriptpath%\tmp\%kenh%.4"
+			REM set /a lcount+=1
+			REM echo [Class 3 No. !lcount! ] %%i
+			REM set /a ltype=3 )
+	)
+)	
+%sed% "/^\s*$/d" "%scriptpath%\tmp\%kenh%.4">"%scriptpath%\tmp\%kenh%.41"
+%sed% "s/ //g" "%scriptpath%\tmp\%kenh%.41">"%scriptpath%\tmp\%kenh%.0"
+call :RemDup "%scriptpath%\tmp\%kenh%.0"
 for /l %%i in (1,1,4) do ( !ini! tv.ini [!kenh!] link%%i== )
 set /a count=1
 for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 	echo __________________________________________________________
 	echo Source [!stt!] link No. !count! : %%i
-	!streamlink! "%%i" > "%scriptpath%\tmp\%kenh%.7"
-	findstr /i /C:"Available streams" < "%scriptpath%\tmp\%kenh%.7" && (
-		findstr /i "!limset!" < "%scriptpath%\tmp\%kenh%.7" > NUL && (
+	!streamlink! "%%i">"%scriptpath%\tmp\%kenh%.01"
+	findstr /i /C:"Available streams" "%scriptpath%\tmp\%kenh%.01" && (
+		findstr /i "!limset!" "%scriptpath%\tmp\%kenh%.01">NUL && (
 			echo [Streamlink found quality !limset! ] - OK [ Base on Streamlink ]
 			!ini! tv.ini [!kenh!] link!count!=%%i
 			!ini! tv.ini [!kenh!] resolution=!limset!
@@ -73,7 +102,7 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 			!ini! tv.ini [!kenh!] resolution=!res!
 			set /a "count+=1"
 		) else (
-			echo [ FFprobe found resolution !res! ] ^> [ lim=!lim! ] - Do not use this link
+			echo [ FFprobe found resolution !res! ] ^>[ lim=!lim! ] - Do not use this link
 		)
 		goto NextLink
 	)
@@ -93,7 +122,19 @@ goto :eof
 	setlocal
 	set "link=%~2"
 	call apps.bat
-	%ffprobe% -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0 "%link%" > "%scriptpath%\tmp\%kenh%.8"
-	for /f %%x in (' findstr /i "x" %scriptpath%\tmp\%kenh%.8 ') do set "res=%%x"
+	%ffprobe% -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0 "%link%">"%scriptpath%\tmp\%kenh%.r0"
+	for /f %%x in (' findstr /i "x" %scriptpath%\tmp\%kenh%.r0 ') do set "res=%%x"
 	for /f "tokens=1 delims=x" %%x in ("%res%") do set /a "res1=%%x"
 	endlocal & if not "%~1"=="" set /a "%~1=%res1%" & exit /b
+
+:RemDup
+	@echo off
+	setlocal
+	set "file=%~1"
+	set "tmp=remdup.txt"
+	type NUL>"%tmp%"
+	for /f "tokens=*" %%a in (%file%) do (
+		findstr "%%a" "%tmp%">NUL || echo %%a>>"%tmp%"
+	)
+	move /y "%tmp%" "%file%">NUL
+	endlocal & exit /b

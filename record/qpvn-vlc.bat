@@ -1,1 +1,0 @@
-"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "http://125.212.132.219:1935/standard/_definst_/mp4:standard_480p/chunklist_w1832824899.m3u8" worst  
