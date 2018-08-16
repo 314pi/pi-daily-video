@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL http://live2.thvli.vn/72746c918537be2ddd8f94dbcd02d1f01533823016/live/thvl1hd.m3u8
-Available streams: 720k (worst), 2160k (best)
+[cli][info] Found matching plugin hls for URL https://vtn.vn.data.garena.tv/hls/198087/2315307.m3u8
+Available streams: live (worst, best)
 [End of Streamlink for Windows with ExitCode 0]

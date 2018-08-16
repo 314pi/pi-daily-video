@@ -1,17 +1,17 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
-set del1= 00:40:50
+set del1= 00:00:00
 ::::::::::::::::: QC I
-set fil1= 00:58:58
-set adv1= 01:01:32
+set fil1= 00:24:04
+set adv1= 00:29:12
 ::::::::::::::::: QC II
-set fil2= 01:01:32
-set adv2= 01:01:32
+set fil2= 00:44:05
+set adv2= 00:49:12
 ::::::::::::::::: END
-set sub2= 01:18:49
+set sub2= 00:36:20
 ::=================================
-set tap= 18
+set tap= 219
 set subpos=tr
 set /a sub=0
 set thumb= tdqmm.jpg

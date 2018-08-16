@@ -4,13 +4,15 @@ call apps.bat
 set lims[0]=700
 set lims[1]=1000
 set lims[2]=1300
+set lims[3]=2000
 set limsets[0]=360p 720k 1000k
 set limsets[1]=480p 540p
 set limsets[2]=720p 2160k
+set limsets[3]=1080p
 set /a limc=0
 :ChangeLim
 echo ==========================================================
-if %limc% geq 3 (
+if %limc% geq 4 (
 	echo Not found any link for stream record
 	goto :eof )
 set /a lim=lims[%limc%]
@@ -37,7 +39,7 @@ echo ==========================================================
 echo Source [%stt%]: %source%
 type NUL>"%scriptpath%\tmp\%kenh%.4"
 %wget% -qO- %source%>"%scriptpath%\tmp\%kenh%.1"
-%grep% -Eo "http[^\,]+m3u8" "%scriptpath%\tmp\%kenh%.1">"%scriptpath%\tmp\%kenh%.2" && (
+%grep% -Eo "http[^\,=]+m3u8" "%scriptpath%\tmp\%kenh%.1">"%scriptpath%\tmp\%kenh%.2" && (
 	echo Type 1 [ http://-- m3u8 ]
 	call :RemDup "%scriptpath%\tmp\%kenh%.2"
 	copy "%scriptpath%\tmp\%kenh%.2" "%scriptpath%\tmp\%kenh%.4">NUL
@@ -90,6 +92,7 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 	findstr /i /C:"Available streams" "%scriptpath%\tmp\%kenh%.01" && (
 		findstr /i "!limset!" "%scriptpath%\tmp\%kenh%.01">NUL && (
 			echo [Streamlink found quality !limset! ] - OK [ Base on Streamlink ]
+			echo !streamlink! "--player=!vlc!" "%%i" worst > "!scriptpath!\log\!kenh!-vlc.bat"
 			!ini! tv.ini [!kenh!] link!count!=%%i
 			!ini! tv.ini [!kenh!] resolution=!limset!
 			set /a "count+=1"
@@ -98,6 +101,7 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 		call :GetRes res %%i
 		if !res! leq !lim! (
 			echo [ FFprobe found resolution !res! ] ^< [ lim=!lim! ] - OK [ Base on FFprobe ]
+			echo !streamlink! "--player=!vlc!" "%%i" worst > "!scriptpath!\log\!kenh!-vlc.bat"
 			!ini! tv.ini [!kenh!] link!count!=%%i
 			!ini! tv.ini [!kenh!] resolution=!res!
 			set /a "count+=1"

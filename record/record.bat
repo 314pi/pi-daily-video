@@ -69,13 +69,11 @@ if %pad% geq 1 (
 		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:fontsize=10:fontcolor=white" ) 	
 )
 echo %resolution% > "%scriptpath%\tmp\%kenh%.10"
-findstr /i "720p 1280 2160k" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v superfast )
+findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v superfast )
 findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v veryfast )
 set ffopt=%ffopt% -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe %preset%
 if %rlog% equ 1 (
-	echo [ %time% ]-URL[%link_count%]=%streamurl% >> "%scriptpath%\log\%kenh%.log"
-	echo %streamlink% "%streamurl%" worst > "%userprofile%\desktop\%kenh%-v.bat"
-	echo %streamlink% "--player=%vlc%" "%streamurl%" worst > "%scriptpath%\log\%kenh%-vlc.bat" )
+	echo [ %time% ]-URL[%link_count%]=%streamurl% >> "%scriptpath%\log\%kenh%.log" )
 title %kenh% - %time% / %endtime% - URL[%link_count%] - [%dur%] - [res=%resolution% =^> %preset%] - [pad=%pad%] - [logo=%plogo%]
 if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 > NUL )
 %ffprobe% -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0 "%streamurl%"

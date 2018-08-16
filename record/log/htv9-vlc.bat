@@ -1,1 +1,0 @@
-"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "http://hplusliveall.e96bbe18.sabai.vn/262dfd8a546426cadaeda29bedfafcff1533643564/htv9-1080/playlist.m3u8" worst  

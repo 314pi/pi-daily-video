@@ -1,3 +1,4 @@
 *.ts
 *.mp4
-\record\tmp
+*.aac
+\record\tmp\*

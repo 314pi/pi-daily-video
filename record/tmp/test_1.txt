@@ -1,0 +1,2 @@
+http://data.xemtiviso.com/live/vtv/vtv1.php
+https://www.facebook.com/plugins/follow?href=https%3A%2F%2Fwww.facebook.com%2Fxemtiviso&amp;layout=button_count&amp;show_faces=false&amp;colorscheme=light&amp;width=100&amp;height=18
