@@ -34,7 +34,7 @@ if not %source% == "" set source=%source: =%
 if %source% == "" (
 	set /a stt+=1
 	goto GetLink1 )
-title [%kenh%] - [lim=%lim%]
+title Getlink [%kenh%] - [lim=%lim%]
 echo ==========================================================
 echo Source [%stt%]: %source%
 type NUL>"%scriptpath%\tmp\%kenh%.4"

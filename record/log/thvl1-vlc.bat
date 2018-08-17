@@ -1,1 +1,1 @@
-"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "https://vtn.vn.data.garena.tv/hls/198087/2315307.m3u8" worst 
+"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "http://live2.thvli.vn/eb5c710a9fa98c636b6e48cef8be990b1534546829/live/thvl1hd.m3u8" worst 

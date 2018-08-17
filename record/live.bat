@@ -24,7 +24,6 @@ if %src_count% geq 5 (
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 	set /a "src_count=1" )
 call getlink.bat %kenh% %src_count%
-timeout /t 5
 
 :NoGetLink
 set /a link_count=1
@@ -72,10 +71,10 @@ echo %resolution% > "%scriptpath%\tmp\%kenh%.10"
 findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v superfast )
 findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v veryfast )
 set ffopt=%ffopt% -f mp4 -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe %preset%
-title %kenh% - %time% / %endtime% - URL[%link_count%] - [%dur%] - [res=%resolution% =^> %preset%] - [pad=%pad%] - [logo=%plogo%]
+title Live [%kenh%] - %time% / %endtime% - URL[%link_count%] - [%dur%] - [res=%resolution% =^> %preset%] - [pad=%pad%] - [logo=%plogo%]
 if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 > NUL )
 %ffprobe% -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0 "%streamurl%"
-%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -s 640x360 -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv "rtmp://live-api-s.facebook.com:80/rtmp/249230595853015?s_ps=1&s_vt=api-s&a=AThIWvRa8ZTc5RyR"
+%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline  -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv "rtmp://live-api-s.facebook.com:80/rtmp/249230595853015?s_ps=1&s_vt=api-s&a=AThIWvRa8ZTc5RyR"
 call :getTime now
 if "%now%" leq "%endtime%" (
 	goto :start_record

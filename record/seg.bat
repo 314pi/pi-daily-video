@@ -3,13 +3,13 @@ setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
 set del1= 00:00:00
 ::::::::::::::::: QC I
-set fil1= 00:24:04
-set adv1= 00:29:12
+set fil1= 00:11:56
+set adv1= 00:16:45
 ::::::::::::::::: QC II
-set fil2= 00:44:05
-set adv2= 00:49:12
+set fil2= 00:28:27
+set adv2= 00:34:56
 ::::::::::::::::: END
-set sub2= 00:36:20
+set sub2= 00:51:00
 ::=================================
 set tap= 219
 set subpos=tr

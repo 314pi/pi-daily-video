@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL http://liverestreamobj.9a8f447e.viettel-cdn.vn/vtv3.smil/playlist.m3u8
-Available streams: 750k (worst), 1000k, 1500k, 2000k (best)
+[cli][info] Found matching plugin hls for URL https://talk2.vcdn.vn/hls/7553532bc3e7f3da8c8951b4a9bf4d4a/16546f2efe5/saimk/index.m3u8
+Available streams: live (worst, best)
 [End of Streamlink for Windows with ExitCode 0]
