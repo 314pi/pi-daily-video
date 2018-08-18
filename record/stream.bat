@@ -9,61 +9,59 @@ if [%mod%]==[] set /a "mod=1"
 ::======================================
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] plogo') do ( %%a )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] pcfg') do ( %%a )
-if not "%pcfg%" == "" set "pcfg=%pcfg: =%"
-if "%pcfg%" == "" ( call :getStop pcfg 1 30 )
+if not "%pcfg%"=="" set "pcfg=%pcfg: =%"
+if "%pcfg%"=="" ( call :getStop pcfg 1 30 )
 call :chongio endtime rcfg "%pcfg%"
 call :strlen %rcfg% cfgl
 if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
-::if %cfgl% geq 5 set spd=%rcfg:~2,3%
 if %getlinkfirst% equ 0 ( goto NoGetLink )
 set /a src_count=1
 :GetLink
 if %src_count% geq 5 (
 	for /l %%x in (1,1,5) do (
 		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[5]
-		if %spk% equ 1 ( %canhbao% ) else ( timeout /t 1 > NUL )
+		if %spk% equ 1 ( %canhbao% ) else ( timeout /t 1 )
 	)
 	echo Downloading TV.INI ...
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 	set /a "src_count=1" )
 call getlink.bat %kenh% %src_count%
-timeout /t 1
-
 :NoGetLink
+if %mod% leq 0 ( goto :eof )
+timeout /t 1
 set /a link_count=1
-if %rlog% equ 1 ( echo stop = %endtime% > "%scriptpath%\log\%kenh%.log" )
+if %rlog% equ 1 ( echo stop=%endtime%>"%scriptpath%\log\%kenh%.log" )
 ::======================================
-:start_record
+:StartStream
 if %link_count% geq 5 (
 	set /a src_count+=1
-	goto GetLink
-)
+	goto GetLink )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%link_count%') do ( %%a )	
 call set streamurl=%%link%link_count%%%
-if not "%streamurl%" == "" (
+if not "%streamurl%"=="" (
 	set "streamurl=%streamurl: =%"
-	if "%streamurl%" == "" ( set /a "link_count+=1" & goto start_record )
-	if "x%streamurl:http=%" == "x%streamurl%" ( set /a "link_count+=1" & goto start_record )
-	if not "x%streamurl:youtube=%" == "x%streamurl%" ( set qual=360p ) else ( set qual=worst )
-) else ( set /a "link_count+=1" & goto start_record )
+	if "%streamurl%"=="" ( set /a "link_count+=1" & goto StartStream )
+	if "x%streamurl:http=%"=="x%streamurl%" ( set /a "link_count+=1" & goto StartStream )
+	if not "x%streamurl:youtube=%"=="x%streamurl%" ( set qual=360p ) else ( set qual=worst )
+) else ( set /a "link_count+=1" & goto StartStream )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] resolution') do ( %%a )
 set filename=%kenh%_%resolution%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 set filename=%filename: =%
 ::=========================================
 call :getTime now
 if "%now%" geq "%endtime%" ( %ketthuc% & goto :eof )
-%streamlink% "%streamurl%" > "%scriptpath%\log\ck.txt"
-findstr /i /C:"Available streams" < "%scriptpath%\log\ck.txt" || (
-	echo Streamlink can not use this link for record [ record.bat ]
-	set /a "link_count+=1" & goto start_record )
+%streamlink% "%streamurl%">"%scriptpath%\log\ck.txt"
+findstr /i /C:"Available streams"<"%scriptpath%\log\ck.txt" || (
+	echo Streamlink can not use this link for stream [ stream.bat ]
+	set /a "link_count+=1" & goto StartStream )
 del "%scriptpath%\log\ck.txt"
 call :getTime now
 call :TimeSub dur "%endtime%" "%now%"
 if "%dur%" geq "03:00:00" set dur=03:00:00
 set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
 if %pad% geq 1 (
-	type s1.txt > pad.txt
-	if %plogo% geq 1 ( echo. >> pad.txt & type t1.txt >> pad.txt )
+	type s1.txt>pad.txt
+	if %plogo% geq 1 ( echo.>>pad.txt & type t1.txt>>pad.txt )
 	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white"
 ) else (
 	if %plogo% equ 1 (
@@ -71,13 +69,13 @@ if %pad% geq 1 (
 	if %plogo% equ 2 (
 		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:fontsize=10:fontcolor=white" ) 	
 )
-echo %resolution% > "%scriptpath%\tmp\%kenh%.10"
-findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v superfast )
-findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10" > NUL && ( set preset=-preset:v veryfast )
+echo %resolution%>"%scriptpath%\tmp\%kenh%.10"
+findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v superfast )
+findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v veryfast )
 set ffopt=%ffopt% -f flv -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe %preset%
 if %rlog% equ 1 (
-	echo [ %time% ]-URL[%link_count%]=%streamurl% >> "%scriptpath%\log\%kenh%.log" )
-if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 > NUL )
+	echo [ %time% ]-URL[%link_count%]=%streamurl%>>"%scriptpath%\log\%kenh%.log" )
+if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 )
 if %mod% equ 1 (
 	title Record [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
 	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% "%filename%"
@@ -90,17 +88,15 @@ if %mod% geq 3 (
 	title Record+Live [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
 	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv - | "%ffmpeg%" -f flv -i - -c copy -f flv %liveurl% -c copy -f flv "%filename%"
 )
-if %mod% leq 0 ( goto :eof )
 call :getTime now
 if "%now%" leq "%endtime%" (
-	goto :start_record
+	goto StartStream
 ) else (
-	if %rlog% equ 1 ( echo [ %time% ] - [ Stop ] [ stream.bat ] >> "%scriptpath%\log\%kenh%.log" )
-	if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 > NUL )
-	goto :eof
-)
+	if %rlog% equ 1 ( echo [ %time% ] - [ Stop ] [ stream.bat ]>>"%scriptpath%\log\%kenh%.log" )
+	if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
+	goto :eof )
 goto :eof
-	
+
 :chongio gio rcfg str
 	@echo off
 	setlocal enableextensions enabledelayedexpansion
@@ -110,9 +106,9 @@ goto :eof
 		call :getTime now
 		if "!now!" leq "!giotach!" (
 			set thay=!giotach!
-			goto :thay )
+			goto Found )
 	)
-	:thay
+	:Found
 	for /f "tokens=1-2 delims=x" %%a in ("%giotach%") do (
 		set "endtime=%%a" & set "rcfg=%%b" )
 	endlocal & set "%~1=%endtime%" & set "%~2=%rcfg%" & exit /b
@@ -177,7 +173,7 @@ goto :eof
 	:: Clean up and return the new time string
 	endlocal & if not "%~1"=="" set "%~1=%h:~-2%:%m:~-2%:%s:~-2%,%c:~-2%" & exit /b
 
-: TimeSub st xx yy
+:TimeSub st xx yy
 	setlocal enableextensions disabledelayedexpansion
 	if "%~3"=="" ( set "yy=%time%" ) else ( set "yy=%~3" )
 	set /a h=100%yy:~0,2% %% 100
