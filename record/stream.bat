@@ -45,7 +45,7 @@ if not "%streamurl%"=="" (
 	if not "x%streamurl:youtube=%"=="x%streamurl%" ( set qual=360p ) else ( set qual=worst )
 ) else ( set /a "link_count+=1" & goto StartStream )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] resolution') do ( %%a )
-set filename=%kenh%_%resolution%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
+set filename="%kenh%_%resolution%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4"
 set filename=%filename: =%
 ::=========================================
 call :getTime now
@@ -72,21 +72,21 @@ if %pad% geq 1 (
 echo %resolution%>"%scriptpath%\tmp\%kenh%.10"
 findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v superfast )
 findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v veryfast )
-set ffopt=%ffopt% -f flv -vcodec libx264 -crf 30 -movflags empty_moov+separate_moof+frag_keyframe %preset%
+set ffopt=-i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -s 640x360 -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
 if %rlog% equ 1 (
 	echo [ %time% ]-URL[%link_count%]=%streamurl%>>"%scriptpath%\log\%kenh%.log" )
 if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 )
 if %mod% equ 1 (
 	title Record [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% "%filename%"
+	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" %ffopt% %filename%
 )
 if %mod% equ 2 (
 	title Live [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv %liveurl%
+	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" %ffopt% %liveurl%
 )
 if %mod% geq 3 (
 	title Record+Live [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv - | "%ffmpeg%" -f flv -i - -c copy -f flv %liveurl% -c copy -f flv "%filename%"
+	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" %ffopt% - | "%ffmpeg%" -f flv -i - -c copy -f flv %liveurl% -c copy -f flv %filename%
 )
 call :getTime now
 if "%now%" leq "%endtime%" (

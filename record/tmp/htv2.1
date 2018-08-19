@@ -1,4 +1,7 @@
 
+
+
+ 
 <style>
 *{margin:0;padding:0;}body{background-color:#000;color:#fff;height:100%;width:100%;overflow:hidden;position:absolute;}
 body{text-align: center;margin: 0px;}
@@ -33,14 +36,18 @@ body{text-align: center;margin: 0px;}
 }
 </style>
 <meta name="referrer" content="no-referrer">
+
 <link href="https://rawgit.com/hoclamwe/js/master/video-js.min.css" rel="stylesheet">
 <script src="https://rawgit.com/hoclamwe/js/master/videojs-ie8.min.js"></script>
 <script src="https://rawgit.com/hoclamwe/js/master/video.min.js"></script>
 <script src="https://rawgit.com/hoclamwe/js/master/videojs-contrib-hls.min.js"></script>
 <script src="https://rawgit.com/hoclamwe/js/master/vjs-hls.min.js"></script>
+
 <body onLoad="init()"><div id="videojs"><video id="restre" autoplay preload="auto" height="100%" width="100%" class="video-js" controls data-setup='{"language": "vi"}'></video></div>
 <script>	
 	function play(link){if(link.indexOf('.php')!=-1){var xmlhttp=new XMLHttpRequest();xmlhttp.open("GET",link,!1);xmlhttp.send();src=xmlhttp.responseText}else src=link;player=videojs("restre");player.ready(function(){player.src({src:src,type:"application/x-mpegURL"})});player.play()}
 	function reload(i){if(player.paused()&&player.error_!=null){if(i<link.length){play(link[i])}else{clearInterval(interval);document.write('<iframe id="Myiframe" src="http://data.xemtiviso.com/beed.php?id=htv2" scrolling="no" height="100%" allowfullscreen="true" width="100%" frameborder="0"></iframe>')}}}
-	function init(){var i=0;link=['http://data.xemtiviso.com/gettalk.php?id=deohoabinh&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/gettalk.php?id=deohoabinh&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/nguon/nguonmytv.php?id=htv2&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/gett.php?id=trangnhung.em&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/gettalk.php?id=neucodon&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/gettalk.php?id=neucodon&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/nguon/next.php?id=htv2&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/nguon/next1.php?id=htv2&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/nguon/next2.php?id=htv2&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/nguon/nguonmytv.php?id=htv2&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://data.xemtiviso.com/1.php?id=htv2hd&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666','http://app.tivi8k.net/sctv.php?id=htv2&token=obF5s1lSxw_1ltNzMZ8O9Q&e=1534493666',];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
+	function init(){var i=0;link=['http://data.tivi4k.net/gettalk.php?id=deohoabinh&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/gettalk.php?id=deohoabinh&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/nguon/nguonmytv.php?id=htv2&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/gett.php?id=trangnhung.em&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/gettalk.php?id=neucodon&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/gettalk.php?id=neucodon&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/nguon/next.php?id=htv2&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/nguon/next1.php?id=htv2&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/nguon/next2.php?id=htv2&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/nguon/nguonmytv.php?id=htv2&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://data.tivi4k.net/1.php?id=htv2hd&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128','http://app.tivi8k.net/sctv.php?id=htv2&token=W2U1l7T9HvoriB51DTmcgg&e=1534665128',];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
 </script></body>
+
+

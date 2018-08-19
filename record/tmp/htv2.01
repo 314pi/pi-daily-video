@@ -1,4 +1,2 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL https://talk2.vcdn.vn/hls/5f882165ea793c45c3a9725703d00649/16546f0de59/deohoabinh/index.m3u8
-Available streams: live (worst, best)
-[End of Streamlink for Windows with ExitCode 0]
+[End of Streamlink for Windows with ExitCode 1]
