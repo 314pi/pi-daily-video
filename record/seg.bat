@@ -1,15 +1,15 @@
 @echo off
 setlocal enabledelayedexpansion & cls
 ::::::::::::::::: START
-set del1= 00:04:45
+set del1= 00:27:54
 ::::::::::::::::: QC I
-set fil1= 00:20:22
-set adv1= 00:26:11
+set fil1= 00:41:56
+set adv1= 00:45:46
 ::::::::::::::::: QC II
-set fil2= 00:38:04
-set adv2= 00:44:24
+set fil2= 01:00:41
+set adv2= 01:02:46
 ::::::::::::::::: END
-set sub2= 00:56:50
+set sub2= 01:13:20
 ::=================================
 set tap= 219
 set subpos=tr

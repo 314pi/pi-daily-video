@@ -8,17 +8,15 @@ set lims[3]=2000
 set /a limc=0
 set /a count=1
 set "kenh=%1"
-set "stt=%2"
 if [%kenh%]==[] set "kenh=test"
-if [%stt%]==[] set /a stt=1
-if %stt% geq 11 set /a stt=1
 for /l %%i in (1,1,4) do ( %ini% tv.ini [%kenh%] link%%i== )
 :ChangeLim
 echo ==========================================================
-if %limc% geq 4 (
-	echo Not found any link for stream record or live.
-	goto :eof )
+if %limc% geq 4 goto Done
 set /a lim=lims[%limc%]
+set "stt=%2"
+if [%stt%]==[] set /a stt=1
+if %stt% geq 11 set /a stt=1
 :GetLink1
 if %stt% geq 11 (
 	set /a limc+=1
@@ -30,7 +28,7 @@ if not %source%=="" set source=%source: =%
 if %source%=="" (
 	set /a stt+=1
 	goto GetLink1 )
-title Getlink [%kenh%]-[lim=%lim%]
+title getlink.bat [ %kenh% ] - [ resolution limits : %lim% ]
 echo ==========================================================
 echo Source [%stt%]: %source%
 type NUL>"%scriptpath%\tmp\%kenh%.4"
@@ -52,7 +50,7 @@ type NUL>"%scriptpath%\tmp\%kenh%.4"
 		echo %%i>"%scriptpath%\tmp\%kenh%.32"
 		!grep! -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.32">NUL && (
 			set /a lcount+=1
-			echo [Class 1 No. !lcount! ] %%i
+			echo [ !lcount! ] [class 1] %%i
 			echo %%i>>"%scriptpath%\tmp\%kenh%.4"
 			set /a ltype=1 )
 		if !ltype! equ 0 (
@@ -60,7 +58,7 @@ type NUL>"%scriptpath%\tmp\%kenh%.4"
 			!sed! "s/ //g" "%scriptpath%\tmp\%kenh%.33">"%scriptpath%\tmp\%kenh%.34"
 			!grep! -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.34">NUL && (
 				set /a lcount+=1
-				echo [Class 2 No. !lcount! ] %%i
+				echo [ !lcount! ] [class 2] %%i
 				set /a ltype=2
 				set /p type2=<"%scriptpath%\tmp\%kenh%.34"
 				echo !type2!>>"%scriptpath%\tmp\%kenh%.4"
@@ -72,34 +70,51 @@ type NUL>"%scriptpath%\tmp\%kenh%.4"
 			REM !wget! -qO- !type3!>"%scriptpath%\tmp\%kenh%.36"
 			REM %grep% -Eo "http[^\,]+" "%scriptpath%\tmp\%kenh%.36">>"%scriptpath%\tmp\%kenh%.4"
 			REM set /a lcount+=1
-			REM echo [Class 3 No. !lcount! ] %%i
+			REM echo [ !lcount! ] [class 3] %%i
 			REM set /a ltype=3 )
 	)
 )	
 %sed% "/^\s*$/d" "%scriptpath%\tmp\%kenh%.4">"%scriptpath%\tmp\%kenh%.41"
 %sed% "s/ //g" "%scriptpath%\tmp\%kenh%.41">"%scriptpath%\tmp\%kenh%.0"
 call :RemDup "%scriptpath%\tmp\%kenh%.0"
+set /a lcount1=0
 for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
+	set /a lcount1+=1
 	echo __________________________________________________________
-	echo Source [!stt!] link No. !count! : %%i
+	echo [!count!] Source [!stt!] link No. !lcount1! : %%i
 	!streamlink! "%%i">"%scriptpath%\tmp\%kenh%.01"
 	findstr /i /C:"Available streams" "%scriptpath%\tmp\%kenh%.01" && (
 		call :GetRes res %%i
 		if !res! leq !lim! (
-			echo [ FFprobe found resolution !res! ]^<[ lim=!lim! ]-OK [ Base on FFprobe ]
+			if !limc! geq 1 (
+				set /a plimc=!limc!-1
+				set /a plim=lims[!plimc!]
+				if !res! lss !plim! (
+					echo [ Already found before ]
+					goto Already )
+			)
+			echo [ FFprobe found resolution !res! ] ^< [ lim=!lim! ] ==^> [ OK ]
 			echo !streamlink! "--player=!vlc!" "%%i" worst>"!scriptpath!\log\!kenh!-vlc.bat"
 			!ini! tv.ini [!kenh!] link!count!=%%i
 			!ini! tv.ini [!kenh!] resolution=!res!
 			set /a "count+=1"
 		) else (
-			echo [ FFprobe found resolution !res! ]^>[ lim=!lim! ]-Do not use this link
+			echo [ FFprobe found resolution !res! ] ^> [ lim=!lim! ] ==^> [ Do not use this link ]
 		)
-	) || echo Streamlink can not use this link for record
-	if !count! geq 5 goto :eof
+	) || echo [ Is not a stream link for record or stream. ]
+	:Already
+	if !count! geq 5 goto Done
 )
 if %count% leq 3 (
 	set /a stt+=1
 	goto GetLink1 )
+:Done
+set /a count=%count%-1
+echo ===============================
+echo ^|^|                           ^|^|
+echo ^|^|[ Found atleast %count% link(s) ]^|^|
+echo ^|^|                           ^|^|
+echo ===============================
 ::if exist .\tmp\%kenh%.* del "%scriptpath%\tmp\%kenh%.*"
 endlocal
 goto :eof
@@ -121,7 +136,6 @@ goto :eof
 	set "tmp=remdup.txt"
 	type NUL>"%tmp%"
 	for /f "tokens=*" %%a in (%file%) do (
-		findstr "%%a" "%tmp%">NUL || echo %%a>>"%tmp%"
-	)
+		findstr "%%a" "%tmp%">NUL || echo %%a>>"%tmp%" )
 	move /y "%tmp%" "%file%">NUL
 	endlocal & exit /b

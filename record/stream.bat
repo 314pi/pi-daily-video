@@ -15,27 +15,20 @@ call :chongio endtime rcfg "%pcfg%"
 call :strlen %rcfg% cfgl
 if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
 if %getlinkfirst% equ 0 ( goto NoGetLink )
-set /a src_count=1
-:GetLink
-if %src_count% geq 5 (
-	for /l %%x in (1,1,5) do (
-		cls & echo ERROR URL___[%kenh% @ TV.INI]___[%%x]/[5]
-		if %spk% equ 1 ( %canhbao% ) else ( timeout /t 1 )
-	)
+:UpdateLink
+if %downloadini% equ 1 (
 	echo Downloading TV.INI ...
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
-	set /a "src_count=1" )
-call getlink.bat %kenh% %src_count%
+)
+call getlink.bat %kenh%
 :NoGetLink
 if %mod% leq 0 ( goto :eof )
+if %rlog% equ 1 ( echo stop=%endtime%>"%scriptpath%\log\%kenh%.log" )
 timeout /t 1
 set /a link_count=1
-if %rlog% equ 1 ( echo stop=%endtime%>"%scriptpath%\log\%kenh%.log" )
 ::======================================
 :StartStream
-if %link_count% geq 5 (
-	set /a src_count+=1
-	goto GetLink )
+if %link_count% geq 5 (	goto UpdateLink )
 for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%link_count%') do ( %%a )	
 call set streamurl=%%link%link_count%%%
 if not "%streamurl%"=="" (
@@ -52,7 +45,7 @@ call :getTime now
 if "%now%" geq "%endtime%" ( %ketthuc% & goto :eof )
 %streamlink% "%streamurl%">"%scriptpath%\log\ck.txt"
 findstr /i /C:"Available streams"<"%scriptpath%\log\ck.txt" || (
-	echo Streamlink can not use this link for stream [ stream.bat ]
+	echo [ Can not use this link for stream. Trying another one ] - [ stream.bat ]
 	set /a "link_count+=1" & goto StartStream )
 del "%scriptpath%\log\ck.txt"
 call :getTime now
@@ -72,21 +65,21 @@ if %pad% geq 1 (
 echo %resolution%>"%scriptpath%\tmp\%kenh%.10"
 findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v superfast )
 findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v veryfast )
-set ffopt=-i pipe:0 -acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -s 640x360 -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
+set ffopt=-acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -s 640x360 -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
 if %rlog% equ 1 (
 	echo [ %time% ]-URL[%link_count%]=%streamurl%>>"%scriptpath%\log\%kenh%.log" )
 if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 )
-if %mod% equ 1 (
-	title Record [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" %ffopt% %filename%
-)
 if %mod% equ 2 (
-	title Live [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" %ffopt% %liveurl%
+	title Live [%kenh%]-URL[%link_count%]-[start:%time:~0,-3%/stop:%endtime:~0,-3%]-[duration:%dur%]-[resolution:%resolution%/%preset%]
+	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %liveurl%
 )
 if %mod% geq 3 (
-	title Record+Live [%kenh%] - URL[%link_count%] - %time%/%endtime% - [%dur%] - [%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" %ffopt% - | "%ffmpeg%" -f flv -i - -c copy -f flv %liveurl% -c copy -f flv %filename%
+	title Record+Live [%kenh%]-URL[%link_count%]-[start:%time:~0,-3%/stop:%endtime:~0,-3%]-[duration:%dur%]-[resolution:%resolution%/%preset%]
+	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% - | "%ffmpeg%" -f flv -i - -c copy -f flv %liveurl% -c copy -f flv %filename%
+)
+if %mod% equ 1 (
+	title Record [%kenh%]-URL[%link_count%]-[start:%time:~0,-3%/stop:%endtime:~0,-3%]-[duration:%dur%]-[resolution:%resolution%/%preset%]
+	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
 )
 call :getTime now
 if "%now%" leq "%endtime%" (
