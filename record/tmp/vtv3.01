@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL https://vtn.vn.data.garena.tv/hls/213153/2604170.m3u8
-error: Unable to open URL: https://vtn.vn.data.garena.tv/hls/213153/2604170.m3u8 (404 Client Error: Not Found for url: https://vtn.vn.data.garena.tv/hls/213153/2604170.m3u8)
-[End of Streamlink for Windows with ExitCode 1]
+[cli][info] Found matching plugin hls for URL http://liverestreamobj.9a8f447e.viettel-cdn.vn/vtv3.smil/playlist.m3u8
+Available streams: 750k (worst), 1000k, 1500k, 2000k (best)
+[End of Streamlink for Windows with ExitCode 0]

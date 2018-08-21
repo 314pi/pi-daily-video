@@ -1,134 +1,31 @@
+<style>html,body{margin:0;}</style>
 
+<style> .video-js {width: 100%; height: 100%;} #videojs {width: 100%; height: 100%;}</style>
 
+<link href="https://rawgit.com/xbdinfo/file/5ca03205/video-js.min.css" rel="stylesheet">
 
+<script src="https://rawgit.com/xbdinfo/file/5ca03205/videojs-ie8.min.js"></script>
 
+<script src="https://rawgit.com/xbdinfo/file/5ca03205/video.min.js"></script>
 
+<script src="https://rawgit.com/xbdinfo/file/5ca03205/videojs-contrib-hls.min.js"></script>
 
+<script src="https://rawgit.com/xbdinfo/file/5ca03205/vjs-hls.min.js"></script>
 
+<body onLoad="init()">
 
+<div id="videojs"><video id="restre" autoplay preload="auto" height="100%" width="100%" class="video-js" controls data-setup='{"language": "vi"}'></video></div>
 
+<script>
 
+	function play(link){if(link.indexOf('.php')!=-1){var xmlhttp=new XMLHttpRequest();xmlhttp.open("GET",link,!1);xmlhttp.send();src=xmlhttp.responseText}else src=link;player=videojs("restre");player.ready(function(){player.src({src:src,type:"application/x-mpegURL"})});player.play()}
 
+	function reload(i){if(player.paused()&&player.error_!=null){if(i<link.length){play(link[i])}else{clearInterval(interval);document.write('<iframe id="Myiframe" src="vinhlong1-2.php" scrolling="no" height="100%" allowfullscreen="true" width="100%" frameborder="0"></iframe>')}}}
 
+	function init(){var i=0;link=['https://vthl.vn.data.garena.tv/hls/213136/2604155.m3u8'];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
 
+</script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<style>.tit{font-size: 28px;color: #fff;text-align: center;margin: 0;	position: absolute;z-index: 2;width: 100%;height: 60%;display: table;}</style><span class="tit"><span class="tit-child"><span class="tit-grandchild">Tv.101vn.com</span></span></span>
-<meta name="referrer" content="no-referrer">
-
-
-<link href="/s/videojs/video-js.min.css" rel="stylesheet">
-<script src="/s/videojs/videojs-ie8.min.js"></script>
-<script src="/s/videojs/video.js"></script>
-<script src="/s/vjs-hls.min.js"></script>
-
-
-<body onload="init()">
-
-	<div id="videojs">
-		<video id="streaming" autoplay preload="auto" height="100%" width="100%" class="video-js" controls data-setup='{"language": "vi"}'></video>
-	</div>
-	
-	
-	<script>
-
-	
-	 var i = 0;
-	
-	function play(link) {
-			 
-		src = link;
-	    player = videojs("streaming");
-	    player.ready(function() {
-	        player.src({
-	            src: src,
-	            type: "application/x-mpegURL"
-	        })
-	    });
-	    player.play()
-		i++;
-		
-	}
-	function reload(i) {
-	    if (player.paused() && player.error_ != null) {
-	        if (i < link.length) {
-	            play(link[i])
-	        } else {
-	            clearInterval(interval);
-	            document.write('<iframe id="Myiframe" src="http://apps2.101vn.com/app/code/nextbet.php?id=133&token=(*)TcxLjB-0(*)S44(*)i4yO(T&st=(*)9}gv(*)j[gv(*)j[gxO{O[gwO9}o0O[g&sv=6" scrolling="no" height="100%" allowfullscreen="true" width="100%" frameborder="0"></iframe>')
-	        }
-			
-	    }
-	}
-
-	function init() {
-	   
-	    link = ["https://vtn.vn.data.garena.tv/hls/198087/2315307.m3u8?v=1","http://cd.101vn.com/resource/live/file.php?id=thuphamlaai&token=(*)TcxLjB-0(*)S44(*)i4yO(T&st=(*)9}gv(*)j[gv(*)j[gxO{O[gwO9}o0O[g&sv=6","http://tv.101vn.com/ok/blog/code/next.php?id=133&token=(*)TcxLjB-0(*)S44(*)i4yO(T&st=(*)9}gv(*)j[gv(*)j[gxO{O[gwO9}o0O[g&sv=6"];
-	    play(link[i]);
-	    interval = setInterval(function() {
-	        
-	        reload(i);
-			
-		console.log("ssssssss" +i);
-			
-	    }, 2000)
-	}
-		
-		
-	</script>
-	
-	
-	
-	
-	
-	
-	
-	
-<style>
-	.video-js {
-		width: 100%;
-		height: 95%;
-	}
-	body {
-		text-align: center;
-		margin: 0px;
-	}
-	#videojs {
-		width: 100%;
-		height: 95%;
-	}.streaming-dimensions{
-				width: 100% !important;
-		height: 95% !important;
-	}
-</style>
 </body>
 
-
+<span style='position:absolute;top:10px;right:10px;font-size: 13px; font-weight: bold;color: #ff0;'><em>LINK 1</em></span>

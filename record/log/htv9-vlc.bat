@@ -1,1 +1,1 @@
-"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "https://talk2.vcdn.vn/hls/db11bcc9800597b93ba3f86980d9e78b/16552aa0072/neucodon/index.m3u8" worst
+"D:\GitHub\pi-daily-video\record\streamlink\Streamlink.exe" "--player=D:\GitHub\pi-daily-video\record\streamlink\vlc64\vlc.exe" "https://talk2.vcdn.vn/hls/f8087e8edf6d02d0d8a10f39c873e6eb/1655abf80e4/neucodon/index.m3u8" worst

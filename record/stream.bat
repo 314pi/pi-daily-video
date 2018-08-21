@@ -28,8 +28,8 @@ timeout /t 1
 set /a link_count=1
 ::======================================
 :StartStream
-if %link_count% geq 5 (	goto UpdateLink )
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%link_count%') do ( %%a )	
+if %link_count% geq 6 (	goto UpdateLink )
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%link_count%') do ( %%a )
 call set streamurl=%%link%link_count%%%
 if not "%streamurl%"=="" (
 	set "streamurl=%streamurl: =%"
