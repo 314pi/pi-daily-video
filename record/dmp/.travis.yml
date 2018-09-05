@@ -1,0 +1,26 @@
+language: python
+
+python:
+  - '2.6'
+  - '2.7'
+  - '3.3'
+  - '3.4'
+
+install:
+  - pip install -r requirements.txt
+  - pip install pytest > /dev/null
+  - pip install pytest-cov > /dev/null
+  - pip install coveralls > /dev/null
+
+script: py.test --cov dailymotion.py --cov-report term-missing TestDailymotion.py
+
+after_success:
+  - coveralls
+
+deploy:
+  provider: pypi
+  user: dailymotion
+  password:
+    secure: LgLIHRH7OWruOTx0tAiYK/QMH5ecfk+WSEk4k/ifvh2EGR10dEI9hNC/AGSP+i2sGjHkeStFyMKu4rpjc9We/xfhCr27LVrhrWRIk0/1YAzGjQOYHlscX2mr/eRjGjZgWshQrH+CFXYHARYFnPt7riHfD9/X2znlD6VUaWHuXSk=
+  on:
+    branch: master

@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL http://hplusliveall.e96bbe18.sabai.vn/c49575f5719b16830f0d7e89ea9cef9b1534840185/htv7-1080/playlist.m3u8
-Available streams: 1080p (worst, best)
+[cli][info] Found matching plugin hls for URL https://talk2.vcdn.vn/hls/8f65166a53a0caa521ad614536e19ecb/165a9f98583/tichtac.d/index.m3u8
+Available streams: live (worst, best)
 [End of Streamlink for Windows with ExitCode 0]

@@ -1,0 +1,12 @@
+[
+  "tuongmai.py::TestA::test_auth_call",
+  "tuongmai.py::TestA::test_file_storage_session",
+  "tuongmai.py::TestA::test_get",
+  "tuongmai.py::TestA::test_get_access_token",
+  "tuongmai.py::TestA::test_get_authorization_url",
+  "tuongmai.py::TestA::test_in_memory_session",
+  "tuongmai.py::TestA::test_init",
+  "tuongmai.py::TestA::test_session_store_option",
+  "tuongmai.py::TestA::test_set_access_token",
+  "tuongmai.py::TestA::test_set_grant_type"
+]

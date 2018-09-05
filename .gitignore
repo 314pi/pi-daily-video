@@ -1,4 +1,4 @@
 *.ts
 *.mp4
 *.aac
-\record\tmp\*
+**/log/**

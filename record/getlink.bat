@@ -10,7 +10,7 @@ set /a count=1
 set /a bkcount=0
 set "kenh=%1"
 if [%kenh%]==[] set "kenh=test"
-for /l %%i in (1,1,4) do ( %ini% tv.ini [%kenh%] link%%i== )
+for /l %%i in (1,1,5) do ( %ini% tv.ini [%kenh%] link%%i==)
 :ChangeLim
 echo ==========================================================
 if %limc% geq 4 goto Done
@@ -23,7 +23,7 @@ if %stt% geq 11 (
 	set /a limc+=1
 	goto ChangeLim )
 if exist .\tmp\%kenh%.* del "%scriptpath%\tmp\%kenh%.*"
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] source%stt%') do ( %%a )
+for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] source%stt%' ) do ( %%a )
 call set source="%%source%stt%%%"
 if not %source%=="" set source=%source: =%
 if %source%=="" (
@@ -73,7 +73,7 @@ type NUL>"%scriptpath%\tmp\%kenh%.4"
 			REM echo [ !lcount! ] [class 3] %%i
 			REM set /a ltype=3 )
 	)
-)	
+)
 %sed% "/^\s*$/d" "%scriptpath%\tmp\%kenh%.4">"%scriptpath%\tmp\%kenh%.41"
 %sed% "s/ //g" "%scriptpath%\tmp\%kenh%.41">"%scriptpath%\tmp\%kenh%.0"
 call :RemDup "%scriptpath%\tmp\%kenh%.0"
@@ -86,6 +86,7 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 	echo [!count!] Source [!stt!] link No. !lcount1! : & echo %%i
 	!streamlink! "%%i">"%scriptpath%\tmp\%kenh%.01"
 	findstr /i /C:"Available streams" "%scriptpath%\tmp\%kenh%.01" && (
+		set /a already=0
 		call :GetRes res %%i
 		if !res! leq !lim! (
 			if !limc! geq 1 (
@@ -93,23 +94,25 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 				set /a plim=lims[!plimc!]
 				if !res! lss !plim! (
 					echo [ Already found before ]
-					goto Already )
+					set /a already=1 )
 			)
-			echo [ FFprobe found resolution !res! ] ^< [ lim=!lim! ] ==^> [ OK ]
-			echo !streamlink! "--player=!vlc!" "%%i" worst>"!scriptpath!\log\!kenh!-vlc.bat"
-			if !res! lss 640 (
-				!ini! tv.ini [!kenh!] link5=%%i
-				set /a bkcount=1
-			) else (
-				!ini! tv.ini [!kenh!] link!count!=%%i
-				set /a "count+=1"
+			if !already! equ 0 (
+				echo [ FFprobe found resolution !res! ] ^< [ lim=!lim! ] ==^> [ OK ]
+				echo Source [ !source! ]  - [ !stt! ] - [ !lcount1! ]>>"!scriptpath!\log\tk!kenh!.txt"
+				echo !streamlink! "--player=!vlc!" "%%i" worst>"!scriptpath!\log\!kenh!-vlc.bat"
+				if !res! lss 640 (
+					!ini! tv.ini [!kenh!] link5=%%i
+					set /a bkcount=1
+				) else (
+					!ini! tv.ini [!kenh!] link!count!=%%i
+					set /a "count+=1"
+				)
+				!ini! tv.ini [!kenh!] resolution=!res!
 			)
-			!ini! tv.ini [!kenh!] resolution=!res!
 		) else (
 			echo [ FFprobe found resolution !res! ] ^> [ lim=!lim! ] ==^> [ Do not use this link ]
 		)
 	) || echo [ Is not a stream link for record or stream. ]
-	:Already
 	if !count! geq 5 goto Done
 )
 if %count% leq 3 (
@@ -118,7 +121,7 @@ if %count% leq 3 (
 :Done
 echo =====================================
 echo ^|^|                                 ^|^|
-echo ^|^|[ Found atleast %found% and %bkcount% link(s) ]^|^|
+echo ^|^|[ %kenh% ] [ found atleast %found% and %bkcount% link(s) ] [ max resolution %res% ]
 echo ^|^|                                 ^|^|
 echo =====================================
 ::if exist .\tmp\%kenh%.* del "%scriptpath%\tmp\%kenh%.*"

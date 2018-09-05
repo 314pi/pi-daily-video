@@ -1,94 +1,97 @@
-@echo off
-setlocal enableextensions disabledelayedexpansion
-call apps.bat
-set "kenh=%1"
-set "mod=%2"
-set liveurl="rtmp://live-api-s.facebook.com:80/rtmp/249230595853015?s_ps=1&s_vt=api-s&a=AThIWvRa8ZTc5RyR"
-if [%kenh%]==[] set "kenh=test"
-if [%mod%]==[] set /a "mod=1"
+	@echo off
+	setlocal enableextensions disabledelayedexpansion
+	call apps.bat
+	set "channel=%1"
+	set "mod=%2"
+	if [%channel%]==[] set "channel=test"
+	if [%mod%]==[] set /a "mod=1"
+	if not "x%1"=="xall" ( goto FixedChannel )
+	:: else channel = all ( dynamic channel)
+:DynamicChannel
+	call :TimeToChannel channel
+	set /a mod=2
+	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
+:FixedChannel
 ::======================================
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] plogo') do ( %%a )
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] pcfg') do ( %%a )
-if not "%pcfg%"=="" set "pcfg=%pcfg: =%"
-if "%pcfg%"=="" ( call :getStop pcfg 1 30 )
-call :chongio endtime rcfg "%pcfg%"
-call :strlen %rcfg% cfgl
-if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
-if %getlinkfirst% equ 0 ( goto NoGetLink )
+	for /f "delims=" %%a in ('%ini% tv.ini [%channel%] plogo') do ( %%a )
+	for /f "delims=" %%a in ('%ini% tv.ini [%channel%] pcfg') do ( %%a )
+	for /f "delims=" %%a in ('%ini% tv.ini [%channel%] liveurl') do ( %%a )
+	if not "%pcfg%"=="" set "pcfg=%pcfg: =%"
+	if "%pcfg%"=="" ( call :getStop pcfg 1 30 )
+	call :chongio endtime rcfg "%pcfg%"
+	call :strlen %rcfg% cfgl
+	if %cfgl% geq 1 set /a pad=%rcfg:~0,1%
+	if %getlinkfirst% equ 0 ( goto NoGetLink )
+	set /a dowloadcount=0
 :UpdateLink
-if %downloadini% equ 1 (
+	set /a dowloadcount+=1
 	echo Downloading TV.INI ...
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
-)
-call getlink.bat %kenh%
+	if %dowloadcount% geq 3 call getlink.bat %channel%
 :NoGetLink
-if %mod% leq 0 ( goto :eof )
-if %rlog% equ 1 ( echo stop=%endtime%>"%scriptpath%\log\%kenh%.log" )
-timeout /t 1
-set /a link_count=1
+	if %mod% leq 0 ( goto :eof )
+	if %rlog% equ 1 ( echo stop=%endtime%>"%scriptpath%\log\%channel%.log" )
+	timeout /t 1
+	set /a link_count=1
 ::======================================
 :StartStream
-if %link_count% geq 6 (	goto UpdateLink )
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] link%link_count%') do ( %%a )
-call set streamurl=%%link%link_count%%%
-if not "%streamurl%"=="" (
-	set "streamurl=%streamurl: =%"
-	if "%streamurl%"=="" ( set /a "link_count+=1" & goto StartStream )
-	if "x%streamurl:http=%"=="x%streamurl%" ( set /a "link_count+=1" & goto StartStream )
-	if not "x%streamurl:youtube=%"=="x%streamurl%" ( set qual=360p ) else ( set qual=worst )
-) else ( set /a "link_count+=1" & goto StartStream )
-for /f "delims=" %%a in ('%ini% tv.ini [%kenh%] resolution') do ( %%a )
-set filename="%kenh%_%resolution%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4"
-set filename=%filename: =%
-::=========================================
-call :getTime now
-if "%now%" geq "%endtime%" ( %ketthuc% & goto :eof )
-%streamlink% "%streamurl%">"%scriptpath%\log\ck.txt"
-findstr /i /C:"Available streams"<"%scriptpath%\log\ck.txt" || (
-	echo [ Can not use this link for stream. Trying another one ] - [ stream.bat ]
-	set /a "link_count+=1" & goto StartStream )
-del "%scriptpath%\log\ck.txt"
-call :getTime now
-call :TimeSub dur "%endtime%" "%now%"
-if "%dur%" geq "03:00:00" set dur=03:00:00
-set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
-if %pad% geq 1 (
-	type s1.txt>pad.txt
-	if %plogo% geq 1 ( echo.>>pad.txt & type t1.txt>>pad.txt )
-	set ffopt=-filter:v "pad=840:480:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile='arial_0.ttf':textfile=pad.txt:x=(w-text_w)/2:y=10:fontsize=20:fontcolor=white"
-) else (
-	if %plogo% equ 1 (
-		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':box=1:boxcolor=black@0.5:text='%%{localtime\:%tf%}@pilikeyou':y=h-th:fontsize=10:fontcolor=white" )
-	if %plogo% equ 2 (
-		set ffopt=-filter:v "drawtext=fontfile='arial_0.ttf':textfile=sub1.txt:x=(w-text_w)/2:fontsize=10:fontcolor=white" ) 	
-)
-echo %resolution%>"%scriptpath%\tmp\%kenh%.10"
-findstr /i "720p 1280 2160k 1080p 1920" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v superfast )
-findstr /i "480p 540p 960" "%scriptpath%\tmp\%kenh%.10">NUL && ( set preset=-preset:v veryfast )
-set ffopt=-acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -s 640x360 -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
-if %rlog% equ 1 (
-	echo [ %time% ]-URL[%link_count%]=%streamurl%>>"%scriptpath%\log\%kenh%.log" )
-if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 )
-if %mod% equ 2 (
-	title Live [%kenh%]-URL[%link_count%]-[start:%time:~0,-3%/stop:%endtime:~0,-3%]-[duration:%dur%]-[resolution:%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %liveurl%
-)
-if %mod% geq 3 (
-	title Record+Live [%kenh%]-URL[%link_count%]-[start:%time:~0,-3%/stop:%endtime:~0,-3%]-[duration:%dur%]-[resolution:%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% - | "%ffmpeg%" -f flv -i - -c copy -f flv %liveurl% -c copy -f flv %filename%
-)
-if %mod% equ 1 (
-	title Record [%kenh%]-URL[%link_count%]-[start:%time:~0,-3%/stop:%endtime:~0,-3%]-[duration:%dur%]-[resolution:%resolution%/%preset%]
-	%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% %filename%
-)
-call :getTime now
-if "%now%" leq "%endtime%" (
-	goto StartStream
-) else (
-	if %rlog% equ 1 ( echo [ %time% ] - [ Stop ] [ stream.bat ]>>"%scriptpath%\log\%kenh%.log" )
-	if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
-	goto :eof )
-goto :eof
+	if %link_count% geq 6 (	goto UpdateLink )
+	for /f "delims=" %%a in ('%ini% tv.ini [%channel%] link%link_count%') do ( %%a )
+	call set streamurl=%%link%link_count%%%
+	if not "%streamurl%"=="" (
+		set "streamurl=%streamurl: =%"
+		if "%streamurl%"=="" ( set /a "link_count+=1" & goto StartStream )
+		if "x%streamurl:http=%"=="x%streamurl%" ( set /a "link_count+=1" & goto StartStream )
+		if not "x%streamurl:youtube=%"=="x%streamurl%" ( set qual=360p ) else ( set qual=worst )
+	) else ( set /a "link_count+=1" & goto StartStream )
+	for /f "delims=" %%a in ('%ini% tv.ini [%channel%] resolution') do ( %%a )
+	set filename="%channel%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4"
+	set filename=%filename: =%
+	::=========================================
+	call :getTime now
+	if "%now%" geq "%endtime%" ( 
+		if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
+		if "x%1"=="xall" (
+			goto DynamicChannel
+		) else (
+			goto :eof )
+	)
+	%streamlink% "%streamurl%">"%scriptpath%\log\ck.txt"
+	findstr /i /C:"Available streams"<"%scriptpath%\log\ck.txt" || (
+		echo [ Can not use this link for stream. Trying another one ] - [ stream.bat ]
+		set /a "link_count+=1" & goto StartStream )
+	del "%scriptpath%\log\ck.txt"
+	call :getTime now
+	call :TimeSub dur "%endtime%" "%now%"
+	if "%dur%" geq "03:00:00" set dur=03:00:00
+	set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
+	set ffopt=-acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
+	if %rlog% equ 1 (
+		echo [ %time% ]-URL[%link_count%]=%streamurl%>>"%scriptpath%\log\%channel%.log" )
+	if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 )
+	if %mod% equ 2 (
+		title Live [%channel%] - URL[%link_count%] - [start %time:~0,-6% ] + [ %dur:~0,-3% ] = [stop %endtime%] - [ param: %1 %2 %3 ]
+		%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% "%liveurl%"
+	)
+	if %mod% geq 3 (
+		title Record+Live [%channel%] - URL[%link_count%] - [start %time:~0,-6% ] + [ %dur:~0,-3% ] = [stop %endtime%] - [ param: %1 %2 %3 ]
+		%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 %ffopt% - | "%ffmpeg%" -f flv -i - -c copy -f flv "%liveurl%" -s 640x360 -f flv %filename%
+	)
+	if %mod% equ 1 (
+		title Record [%channel%] - URL[%link_count%] - [start %time:~0,-6% ] + [ %dur:~0,-3% ] = [stop %endtime%] - [ param: %1 %2 %3 ]
+		%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -s 640x360 %ffopt% %filename%
+	)
+	call :getTime now
+	if "%now%" leq "%endtime%" (
+		goto StartStream
+	) else (
+		if %rlog% equ 1 ( echo [ %time% ] - [ Stop ] [ stream.bat ]>>"%scriptpath%\log\%channel%.log" )
+		if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
+		if "x%1"=="xall" (
+			goto DynamicChannel
+		) else (
+			goto :eof )
+	goto :eof
 
 :chongio gio rcfg str
 	@echo off
@@ -99,9 +102,9 @@ goto :eof
 		call :getTime now
 		if "!now!" leq "!giotach!" (
 			set thay=!giotach!
-			goto Found )
+			goto CfgFound )
 	)
-	:Found
+	:CfgFound
 	for /f "tokens=1-2 delims=x" %%a in ("%giotach%") do (
 		set "endtime=%%a" & set "rcfg=%%b" )
 	endlocal & set "%~1=%endtime%" & set "%~2=%rcfg%" & exit /b
@@ -198,3 +201,57 @@ goto :eof
 	)
 	endlocal & set %~2=%len%
 	exit /b
+	
+:TimeToChannel channel
+	@echo off
+	call apps.bat
+	setlocal enableextensions enabledelayedexpansion
+	set timetable[0].start=08:50 & set timetable[0].end=09:30 & set timetable[0].chan=qpvn & 	set timetable[0].days=6
+	set timetable[1].start=11:50 & set timetable[1].end=13:00 & set timetable[1].chan=thvl1 & 	set timetable[1].days=0123456
+	set timetable[2].start=13:50 & set timetable[2].end=15:20 & set timetable[2].chan=vtv3 & 	set timetable[2].days=60
+	set timetable[3].start=19:50 & set timetable[3].end=21:00 & set timetable[3].chan=htv2 & 	set timetable[3].days=no
+	set timetable[4].start=19:50 & set timetable[4].end=21:00 & set timetable[4].chan=thvl1 & 	set timetable[4].days=123456
+	set timetable[5].start=21:30 & set timetable[5].end=23:00 & set timetable[5].chan=vtv3 & 	set timetable[5].days=1234
+
+	set /a leng=6
+	for /f "delims=" %%a in ('wmic path win32_localtime get dayofweek /format:list ') do for /f "delims=" %%d in ("%%a") do set %%d
+	::echo day of the week : %dayofweek%
+	set i=0
+	:LoopTime
+		if %i% geq %leng% (
+			title [ cmd: stream all ] Waitting ...  & cls & timeout /t 60
+			set /a i=0 )
+		set cur.chan=
+		set cur.start=
+		set cur.days=
+		set cday=
+
+		for /f "usebackq delims==. tokens=1-3" %%j in (`set timetable[%i%]`) do ( set cur.%%k=%%l )
+		set start=%cur.start%
+		set end=%cur.end%
+		set days=%cur.days%
+		call :NowInTime true %start% %end%
+		if %true% equ 1 (
+			call set "cday=%%days:!dayofweek!=%%"
+			::echo %days% !cday!
+			if not "!cday!" equ "%days%" (
+				set "chan=%cur.chan%"
+				goto FoundChannel )
+		)
+		set /a i=%i%+1
+	goto LoopTime
+	:FoundChannel
+		echo Channel is set to [ %chan% ] & timeout /t 5
+	endlocal & set %~1=%chan% & exit /b
+	
+:NowInTime true start end
+	@echo off
+	setlocal enableextensions enabledelayedexpansion
+	set /a true=0
+	set "start=%~2"
+	set "end=%~3"
+	call :getTime curtime
+	if "%curtime%" geq "%start%" (
+		if "%curtime%" lss "%end%" ( set /a true=1 )
+	)
+	endlocal & set %~1=%true% & exit /b

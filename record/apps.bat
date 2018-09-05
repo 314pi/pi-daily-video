@@ -19,6 +19,7 @@ if not "x%PROCESSOR_ARCHITECTURE:64=%" == "x%PROCESSOR_ARCHITECTURE%" (
 )
 set sed="%scriptpath%\streamlink\GnuWin32\bin\sed.exe"
 set grep="%scriptpath%\streamlink\GnuWin32\bin\grep.exe"
+set youtubedl="%scriptpath%\streamlink\youtubedl\youtube-dl.exe"
 set "voice_opt=-I dummy --play-and-exit --volume 1024"
 set canhbao="%vlc%" %voice_opt% %kenh%.mp3 ccl.mp3
 set batdau="%vlc%" %voice_opt% batdau.mp3 %kenh%.mp3
@@ -29,11 +30,13 @@ for /f "delims=" %%a in ('%ini% my.ini [configure] copyini') do ( %%a )
 for /f "delims=" %%a in ('%ini% my.ini [configure] downloadini') do ( %%a )
 for /f "delims=" %%a in ('%ini% my.ini [configure] rlog') do ( %%a )
 for /f "delims=" %%a in ('%ini% my.ini [configure] getlinkfirst') do ( %%a )
+for /f "delims=" %%a in ('%ini% my.ini [configure] enableremote') do ( %%a )
 if not defined spk set /a spk=0
 if not defined copyini set /a copyini=0
 if not defined downloadini set /a downloadini=0
 if not defined rlog set /a rlog=0
 if not defined getlinkfirst set /a getlinkfirst=1
+if not defined enableremote set /a enableremote=0
 :DownLoad
 if %downloadini% equ 1 (
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"

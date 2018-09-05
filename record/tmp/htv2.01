@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL https://talk2.vcdn.vn/hls/a1d447318de9230cb3f26765ba45ee27/16557b92fee/deohoabinh/index.m3u8
-error: Unable to open URL: https://talk2.vcdn.vn/hls/a1d447318de9230cb3f26765ba45ee27/16557b92fee/deohoabinh/index.m3u8 (410 Client Error: Gone for url: https://talk2.vcdn.vn/hls/a1d447318de9230cb3f26765ba45ee27/16557b92fee/deohoabinh/index.m3u8)
-[End of Streamlink for Windows with ExitCode 1]
+[cli][info] Found matching plugin hls for URL http://live.cdn.mobifonetv.vn/motv/myhtv2_hls.smil/chunklist_b1200000.m3u8
+Available streams: live (worst, best)
+[End of Streamlink for Windows with ExitCode 0]
