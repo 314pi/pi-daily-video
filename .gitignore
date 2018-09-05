@@ -1,4 +1,6 @@
 *.ts
 *.mp4
+*.mp3
+*.mpeg
 *.aac
 **/log/**
