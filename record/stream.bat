@@ -214,12 +214,15 @@
 	set timetable[5].start=21:30 & set timetable[5].end=23:00 & set timetable[5].chan=vtv3 & 	set timetable[5].days=1234
 
 	set /a leng=6
+	set nextchan=
+	set start=00:00
+	set nextstart=23:59
 	for /f "delims=" %%a in ('wmic path win32_localtime get dayofweek /format:list ') do for /f "delims=" %%d in ("%%a") do set %%d
 	::echo day of the week : %dayofweek%
 	set i=0
 	:LoopTime
 		if %i% geq %leng% (
-			title [ cmd: stream all ] Waitting ...  & cls & timeout /t 60
+			title [ cmd: stream all ] [ Next channel: %nextchan% @ %nextstart%] Waitting ...  & cls & timeout /t 60
 			set /a i=0 )
 		set cur.chan=
 		set cur.start=
@@ -237,6 +240,13 @@
 			if not "!cday!" equ "%days%" (
 				set "chan=%cur.chan%"
 				goto FoundChannel )
+		) else (
+			if %nextstart% gtr %start% (
+				call set "cday=%%days:!dayofweek!=%%"
+				if not "!cday!" equ "%days%" (
+					set nextstart=%start%
+					set "nextchan=%cur.chan%" )
+			)
 		)
 		set /a i=%i%+1
 	goto LoopTime
@@ -253,5 +263,7 @@
 	call :getTime curtime
 	if "%curtime%" geq "%start%" (
 		if "%curtime%" lss "%end%" ( set /a true=1 )
+	) else (
+		set /a true=0
 	)
 	endlocal & set %~1=%true% & exit /b
