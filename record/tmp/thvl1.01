@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL https://vtn.vn.data.garena.tv/hls/198167/2315307.m3u8
-Available streams: live (worst, best)
+[cli][info] Found matching plugin hls for URL http://27.67.50.6:18080/133.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FsSXKFr1LvmX8%2BbXWOw5bIuuVRE%2B30w5J5Ma6t22BCelBGq7SmZl6eJRCGegmEGYzjrW8vTsQGlfVLPK2TqoZ7w
+Available streams: 300p (worst), 360p, 480p (best)
 [End of Streamlink for Windows with ExitCode 0]

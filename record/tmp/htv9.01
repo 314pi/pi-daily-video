@@ -1,4 +1,3 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL http://live.cdn.mobifonetv.vn/motv/myhtv9_hls.smil/chunklist_b1200000.m3u8
-Available streams: live (worst, best)
+Available streams: 180p (worst), 270p, 360p, 720p (best)
 [End of Streamlink for Windows with ExitCode 0]

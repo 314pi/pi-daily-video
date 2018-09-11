@@ -1,0 +1,13 @@
+tvtwitch314
+
+admin314	1qaz2wsx
+administrator	#!$!%
+
+import time; int(time.mktime(time.strptime('2018-09-01 00:00:00', '%Y-%m-%d%H:%M:%S'))) - time.timezone
+
+Lịch Live stream hôm nay 06/9/2018 Tất cả tại 1 link duy nhất: http://dịu.vn/
+12h00: Tình người kiếp rắn tập 4 - THVL1
+20h00: Trần Trung kỳ án tập 12 - THVL1
+21h30: Ghét thì yêu thôi tập 4 - VTV3
+
+https://www.ytmonster.net/register?ref=Tuong314

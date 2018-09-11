@@ -48,7 +48,7 @@ type NUL>"%scriptpath%\tmp\%kenh%.4"
 	for /f %%i in (%scriptpath%\tmp\%kenh%.31) do (
 		set /a ltype=0
 		echo %%i>"%scriptpath%\tmp\%kenh%.32"
-		!grep! -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.32">NUL && (
+		!grep! -Eo "^.*m3u8" "%scriptpath%\tmp\%kenh%.32">NUL && (
 			set /a lcount+=1
 			echo [class 1] [!lcount!] : & echo %%i
 			echo %%i>>"%scriptpath%\tmp\%kenh%.4"
@@ -56,7 +56,7 @@ type NUL>"%scriptpath%\tmp\%kenh%.4"
 		if !ltype! equ 0 (
 			!wget! -qO- "%%i">"%scriptpath%\tmp\%kenh%.33"
 			!sed! "s/ //g" "%scriptpath%\tmp\%kenh%.33">"%scriptpath%\tmp\%kenh%.34"
-			!grep! -Eo "^.*m3u8$" "%scriptpath%\tmp\%kenh%.34">NUL && (
+			!grep! -Eo "^.*m3u8" "%scriptpath%\tmp\%kenh%.34">NUL && (
 				set /a lcount+=1
 				echo [class 2] [!lcount!] : & echo %%i
 				set /a ltype=2
@@ -125,6 +125,7 @@ echo ^|^|[ %kenh% ] [ found atleast %found% and %bkcount% link(s) ] [ max resolu
 echo ^|^|                                 ^|^|
 echo =====================================
 ::if exist .\tmp\%kenh%.* del "%scriptpath%\tmp\%kenh%.*"
+if exist ftp.txt ftp -s:ftp.txt
 endlocal
 goto :eof
 

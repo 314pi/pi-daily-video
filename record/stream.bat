@@ -3,13 +3,13 @@
 	call apps.bat
 	set "channel=%1"
 	set "mod=%2"
-	if [%channel%]==[] set "channel=test"
-	if [%mod%]==[] set /a "mod=1"
+	if [%1]==[] set "channel=test"
+	if [%2]==[] set /a "mod=1"
 	if not "x%1"=="xall" ( goto FixedChannel )
 	:: else channel = all ( dynamic channel)
 :DynamicChannel
 	call :TimeToChannel channel
-	set /a mod=2
+	if [%2]==[] set /a "mod=2"
 	powershell -Command "(New-Object Net.WebClient).DownloadFile('http://chuyendungath.com/images/videos/up/tv.ini', 'tv.ini')"
 :FixedChannel
 ::======================================
@@ -37,7 +37,7 @@
 :StartStream
 	if %link_count% geq 6 (	goto UpdateLink )
 	for /f "delims=" %%a in ('%ini% tv.ini [%channel%] link%link_count%') do ( %%a )
-	call set streamurl=%%link%link_count%%%
+	call set "streamurl=%%link%link_count%%%"
 	if not "%streamurl%"=="" (
 		set "streamurl=%streamurl: =%"
 		if "%streamurl%"=="" ( set /a "link_count+=1" & goto StartStream )
@@ -48,8 +48,8 @@
 	set filename="%channel%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4"
 	set filename=%filename: =%
 	::=========================================
-	call :getTime now
-	if "%now%" geq "%endtime%" ( 
+	call :getTime nows
+	if "%nows%" geq "%endtime%" ( 
 		if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
 		if "x%1"=="xall" (
 			goto DynamicChannel
@@ -61,13 +61,13 @@
 		echo [ Can not use this link for stream. Trying another one ] - [ stream.bat ]
 		set /a "link_count+=1" & goto StartStream )
 	del "%scriptpath%\log\ck.txt"
-	call :getTime now
-	call :TimeSub dur "%endtime%" "%now%"
+	call :getTime nowd
+	call :TimeSub dur "%endtime%" "%nowd%"
 	if "%dur%" geq "03:00:00" set dur=03:00:00
 	set streamopt=%qual% --hls-segment-threads 10 --hls-duration %dur%
 	set ffopt=-acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
 	if %rlog% equ 1 (
-		echo [ %time% ]-URL[%link_count%]=%streamurl%>>"%scriptpath%\log\%channel%.log" )
+		echo [ %time% ]-URL[%link_count%]="%streamurl%">>"%scriptpath%\log\%channel%.log" )
 	if %spk% equ 1 ( %batdau% ) else ( timeout /t 1 )
 	if %mod% equ 2 (
 		title Live [%channel%] - URL[%link_count%] - [start %time:~0,-6% ] + [ %dur:~0,-3% ] = [stop %endtime%] - [ param: %1 %2 %3 ]
@@ -81,8 +81,8 @@
 		title Record [%channel%] - URL[%link_count%] - [start %time:~0,-6% ] + [ %dur:~0,-3% ] = [stop %endtime%] - [ param: %1 %2 %3 ]
 		%streamlink% "%streamurl%" %streamopt% --stdout | "%ffmpeg%" -i pipe:0 -s 640x360 %ffopt% %filename%
 	)
-	call :getTime now
-	if "%now%" leq "%endtime%" (
+	call :getTime nowe
+	if "%nowe%" lss "%endtime%" (
 		goto StartStream
 	) else (
 		if %rlog% equ 1 ( echo [ %time% ] - [ Stop ] [ stream.bat ]>>"%scriptpath%\log\%channel%.log" )
@@ -91,6 +91,7 @@
 			goto DynamicChannel
 		) else (
 			goto :eof )
+	)
 	goto :eof
 
 :chongio gio rcfg str
@@ -209,14 +210,15 @@
 	set timetable[0].start=08:50 & set timetable[0].end=09:30 & set timetable[0].chan=qpvn & 	set timetable[0].days=6
 	set timetable[1].start=11:50 & set timetable[1].end=13:00 & set timetable[1].chan=thvl1 & 	set timetable[1].days=0123456
 	set timetable[2].start=13:50 & set timetable[2].end=15:20 & set timetable[2].chan=vtv3 & 	set timetable[2].days=60
-	set timetable[3].start=19:50 & set timetable[3].end=21:00 & set timetable[3].chan=htv2 & 	set timetable[3].days=no
-	set timetable[4].start=19:50 & set timetable[4].end=21:00 & set timetable[4].chan=thvl1 & 	set timetable[4].days=123456
+	set timetable[3].start=19:50 & set timetable[3].end=21:00 & set timetable[3].chan=htv2 & 	set timetable[3].days=123
+	set timetable[4].start=19:50 & set timetable[4].end=21:00 & set timetable[4].chan=thvl1 & 	set timetable[4].days=456
 	set timetable[5].start=21:30 & set timetable[5].end=23:00 & set timetable[5].chan=vtv3 & 	set timetable[5].days=1234
 
 	set /a leng=6
 	set nextchan=
 	set start=00:00
 	set nextstart=23:59
+	call :getTime now
 	for /f "delims=" %%a in ('wmic path win32_localtime get dayofweek /format:list ') do for /f "delims=" %%d in ("%%a") do set %%d
 	::echo day of the week : %dayofweek%
 	set i=0
@@ -241,11 +243,14 @@
 				set "chan=%cur.chan%"
 				goto FoundChannel )
 		) else (
-			if %nextstart% gtr %start% (
-				call set "cday=%%days:!dayofweek!=%%"
-				if not "!cday!" equ "%days%" (
-					set nextstart=%start%
-					set "nextchan=%cur.chan%" )
+			call :getTime now
+			if "%start%" gtr "%now%" (
+				if "%nextstart%" gtr "%start%" (
+					call set "cday=%%days:!dayofweek!=%%"
+					if not "!cday!" equ "%days%" (
+						set nextstart=%start%
+						set "nextchan=%cur.chan%" )
+				)
 			)
 		)
 		set /a i=%i%+1
