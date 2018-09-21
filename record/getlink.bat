@@ -99,7 +99,7 @@ for /f %%i in (%scriptpath%\tmp\%kenh%.0) do (
 			if !already! equ 0 (
 				echo [ FFprobe found resolution !res! ] ^< [ lim=!lim! ] ==^> [ OK ]
 				echo Source [ !source! ]  - [ !stt! ] - [ !lcount1! ]>>"!scriptpath!\log\tk!kenh!.txt"
-				echo !streamlink! "--player=!vlc!" "%%i" worst>"!scriptpath!\log\!kenh!-vlc.bat"
+				if !count! leq 1 echo !streamlink! "--player=!vlc!" "%%i" worst>"!scriptpath!\log\!kenh!-vlc.bat"
 				if !res! lss 640 (
 					!ini! tv.ini [!kenh!] link5=%%i
 					set /a bkcount=1

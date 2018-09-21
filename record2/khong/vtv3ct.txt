@@ -1,3 +1,0 @@
-http://talk2.vcdn.vn/hls/b72fe520d2b9e3ba3ef13b3519aff95e/163c43d827d/khonghenhme/index.m3u8
-http://talk2.vcdn.vn/hls/60c00fee3ec6de771ecb07eef6f68a89/163c43de4f6/khonghenhme/index.m3u8
-http://talk2.vcdn.vn/hls/28324d16dbce91dcecb4aacb228f2bdd/163c437346e/khonghenhme/index.m3u8

@@ -27,7 +27,7 @@ body{text-align: center;margin: 0px;}
 #videojs {width: 100%;height: 100%;}
 }
 @media screen and (max-width:480px){
-.video-js {width: 100%;	height: 250px;}
+.video-js {width: 100%;	height: 200px;}
 #videojs {width: 100%;height: 100%;}
 }
 @media screen and (max-width:320px){
@@ -48,7 +48,7 @@ body{text-align: center;margin: 0px;}
 <script>	
 	function play(link){if(link.indexOf('.php')!=-1){var xmlhttp=new XMLHttpRequest();xmlhttp.open("GET",link,!1);xmlhttp.send();src=xmlhttp.responseText}else src=link;player=videojs("restre");player.ready(function(){player.src({src:src,type:"application/x-mpegURL"})});player.play()}
 	function reload(i){if(player.paused()&&player.error_!=null){if(i<link.length){play(link[i])}else{clearInterval(interval);document.write('<iframe id="Myiframe" src="http://data.kenhtivihd.net/nguon/hplus.php?id=htv2" scrolling="no" height="100%" allowfullscreen="true" width="100%" frameborder="0"></iframe>')}}}
-	function init(){var i=0;link=['http://data.kenhtivihd.net/nguon/gena.php?id=2251487&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/nguon/getmytv.php?id=htv2&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/nguon/nguonmytv.php?id=htv2&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/1.php?id=htv2hd&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/gettalk.php?id=nho.anh&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/nguon/nguonmytv.php?id=htv2&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/gettalk.php?id=thunhunghtv&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632','http://data.kenhtivihd.net/1.php?id=htv2&token=YJ4ii7pOVbgl4i0Oyzja3A&e=1536635632',];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
+	function init(){var i=0;link=['http://data.kenhtivihd.net/gettalk.php?id=duymanhlive&token=U25mOT-zYkStMwk1YdDjzA&e=1537449226','http://data.kenhtivihd.net/gettalk.php?id=duymanhlive&token=U25mOT-zYkStMwk1YdDjzA&e=1537449226','http://mytv.xemtiviso.tv/tvnet3.php?id=htv2&token=U25mOT-zYkStMwk1YdDjzA&e=1537449226','http://data.kenhtivihd.net/nguon/getmytv.php?id=htv2&token=U25mOT-zYkStMwk1YdDjzA&e=1537449226','http://data.kenhtivihd.net/nguon/my.php?id=htv2&token=U25mOT-zYkStMwk1YdDjzA&e=1537449226','http://data.kenhtivihd.net/nguon/nguonmytv.php?id=htv2&token=U25mOT-zYkStMwk1YdDjzA&e=1537449226',];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
 </script></body>
 
 

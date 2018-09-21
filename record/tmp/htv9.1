@@ -24,7 +24,7 @@ body{text-align: center;margin: 0px;}
 #videojs {width: 100%;height: 100%;}
 }
 @media screen and (max-width:480px){
-.video-js {width: 100%;	height: 250px;}
+.video-js {width: 100%;	height: 200px;}
 #videojs {width: 100%;height: 100%;}
 }
 @media screen and (max-width:320px){
@@ -34,13 +34,13 @@ body{text-align: center;margin: 0px;}
 </style>
 <meta name="referrer" content="no-referrer">
 <link href="https://rawgit.com/hoclamwe/js/master/video-js.min.css" rel="stylesheet">
-<script src="https://rawgit.com/hoclamwe/js/master/videojs-ie8.min.js" type="fdd64e4728aaa063726a26d5-text/javascript"></script>
-<script src="https://rawgit.com/hoclamwe/js/master/video.min.js" type="fdd64e4728aaa063726a26d5-text/javascript"></script>
-<script src="https://rawgit.com/hoclamwe/js/master/videojs-contrib-hls.min.js" type="fdd64e4728aaa063726a26d5-text/javascript"></script>
-<script src="https://rawgit.com/hoclamwe/js/master/vjs-hls.min.js" type="fdd64e4728aaa063726a26d5-text/javascript"></script>
-<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/2448a7bd/cloudflare-static/rocket-loader.min.js" data-cf-nonce="fdd64e4728aaa063726a26d5-"></script><body onLoad="init()"><div id="videojs"><video id="restre" autoplay preload="auto" height="100%" width="100%" class="video-js" controls data-setup='{"language": "vi"}'></video></div>
-<script type="fdd64e4728aaa063726a26d5-text/javascript">	
+<script src="https://rawgit.com/hoclamwe/js/master/videojs-ie8.min.js" type="1735ad87b819fa5cbeb3c57b-text/javascript"></script>
+<script src="https://rawgit.com/hoclamwe/js/master/video.min.js" type="1735ad87b819fa5cbeb3c57b-text/javascript"></script>
+<script src="https://rawgit.com/hoclamwe/js/master/videojs-contrib-hls.min.js" type="1735ad87b819fa5cbeb3c57b-text/javascript"></script>
+<script src="https://rawgit.com/hoclamwe/js/master/vjs-hls.min.js" type="1735ad87b819fa5cbeb3c57b-text/javascript"></script>
+<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/2448a7bd/cloudflare-static/rocket-loader.min.js" data-cf-nonce="1735ad87b819fa5cbeb3c57b-"></script><body onLoad="init()"><div id="videojs"><video id="restre" autoplay preload="auto" height="100%" width="100%" class="video-js" controls data-setup='{"language": "vi"}'></video></div>
+<script type="1735ad87b819fa5cbeb3c57b-text/javascript">	
 	function play(link){if(link.indexOf('.php')!=-1){var xmlhttp=new XMLHttpRequest();xmlhttp.open("GET",link,!1);xmlhttp.send();src=xmlhttp.responseText}else src=link;player=videojs("restre");player.ready(function(){player.src({src:src,type:"application/x-mpegURL"})});player.play()}
 	function reload(i){if(player.paused()&&player.error_!=null){if(i<link.length){play(link[i])}else{clearInterval(interval);document.write('<iframe id="Myiframe" src="http://data.xemtiviso.com/beed.php?id=htv9" scrolling="no" height="100%" allowfullscreen="true" width="100%" frameborder="0"></iframe>')}}}
-	function init(){var i=0;link=['http://data.xemtivinet.com/nguon/getmytv.php?id=htv9hd&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/nguonmytv.php?id=htv9hd&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/nguonmytv.php?id=htv9hd&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/getmytv.php?id=htv9&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/getmytv.php?id=htv9hd&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/next.php?id=htv9&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/next1.php?id=htv9&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968','http://data.xemtivinet.com/nguon/next2.php?id=htv9&token=NBP2IGyUUGWoQakmpvep0A&e=1536635968',];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
-</script><script src="https://ajax.cloudflare.com/cdn-cgi/scripts/2448a7bd/cloudflare-static/rocket-loader.min.js" data-cf-nonce="fdd64e4728aaa063726a26d5-" defer=""></script></body>
+	function init(){var i=0;link=['http://test.xemtiviso.net/tvnet2.php?id=htv9&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/gettalk.php?id=soteoido&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/gettalk.php?id=soteoido&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://test.xemtiviso.net/tvnet2.php?id=htv9&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://test.xemtiviso.net/tvnet2.php?id=htv9hd&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/nguon/nguonmytv.php?id=htv9hd&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/nguon/getmytv.php?id=htv9&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/nguon/getmytv.php?id=htv9hd&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/nguon/next.php?id=htv9&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/nguon/next1.php?id=htv9&token=H9f9dKumolwESBam_xJKiw&e=1537449489','http://data.xemtivinet.com/nguon/next2.php?id=htv9&token=H9f9dKumolwESBam_xJKiw&e=1537449489',];play(link[i]);interval=setInterval(function(){i++;reload(i)},2000)}
+</script><script src="https://ajax.cloudflare.com/cdn-cgi/scripts/2448a7bd/cloudflare-static/rocket-loader.min.js" data-cf-nonce="1735ad87b819fa5cbeb3c57b-" defer=""></script></body>

@@ -1,1 +1,0 @@
-(for %%i in (part*.ts) do @echo %%i,,) > p4c.txt

@@ -1,0 +1,8 @@
+open ftp.chuyendungath.vn
+nhchue5r
+FUm9ZEilLF3r9IlNkdEZ
+cd /public_html/images/videos/up
+lcd D:\GitHub\pi-daily-video\record
+binary
+put gtyt8.mp4
+quit

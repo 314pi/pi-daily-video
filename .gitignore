@@ -3,4 +3,7 @@
 *.mp3
 *.mpeg
 *.aac
-**/log/**
+!/record/log
+/record/log/*
+!/record/tmp
+/record/tmp/*

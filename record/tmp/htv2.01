@@ -1,4 +1,4 @@
 [Streamlink for Windows v0.14.0 - Git 4f5bb1e]
-[cli][info] Found matching plugin hls for URL http://s8162.cdn.mytvnet.vn/v5live.m3u8?c=vstv001&q=auto&deviceType=4&userId=26689&deviceId=&type=tv&rkey=09111012vZwyj0iq&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg11&profiles=high,medium&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn
-Available streams: 1200k (worst), 1800k (best)
-[End of Streamlink for Windows with ExitCode 0]
+[cli][info] Found matching plugin hls for URL http://s194.cdn.mytvnet.vn/v5live.m3u8?c=vstv001&q=250k&deviceType=&userId=16911&deviceId=&type=tv&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg11&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn&rkey=09202009cmeFQa1a
+error: Unable to open URL: http://s194.cdn.mytvnet.vn/v5live.m3u8?c=vstv001&q=250k&deviceType=&userId=16911&deviceId=&type=tv&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg11&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn&rkey=09202009cmeFQa1a (403 Client Error: Forbidden for url: http://s194.cdn.mytvnet.vn/v5live.m3u8?c=vstv001&q=250k&deviceType=&userId=16911&deviceId=&type=tv&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg11&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn&rkey=09202009cmeFQa1a)
+[End of Streamlink for Windows with ExitCode 1]

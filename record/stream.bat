@@ -51,10 +51,7 @@
 	call :getTime nows
 	if "%nows%" geq "%endtime%" ( 
 		if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
-		if "x%1"=="xall" (
-			goto DynamicChannel
-		) else (
-			goto :eof )
+		goto :eof
 	)
 	%streamlink% "%streamurl%">"%scriptpath%\log\ck.txt"
 	findstr /i /C:"Available streams"<"%scriptpath%\log\ck.txt" || (
@@ -87,10 +84,7 @@
 	) else (
 		if %rlog% equ 1 ( echo [ %time% ] - [ Stop ] [ stream.bat ]>>"%scriptpath%\log\%channel%.log" )
 		if %spk% equ 1 ( %ketthuc% ) else ( timeout /t 1 )
-		if "x%1"=="xall" (
-			goto DynamicChannel
-		) else (
-			goto :eof )
+		goto :eof
 	)
 	goto :eof
 
@@ -210,8 +204,8 @@
 	set timetable[0].start=08:50 & set timetable[0].end=09:30 & set timetable[0].chan=qpvn & 	set timetable[0].days=6
 	set timetable[1].start=11:50 & set timetable[1].end=13:00 & set timetable[1].chan=thvl1 & 	set timetable[1].days=0123456
 	set timetable[2].start=13:50 & set timetable[2].end=15:20 & set timetable[2].chan=vtv3 & 	set timetable[2].days=60
-	set timetable[3].start=19:50 & set timetable[3].end=21:00 & set timetable[3].chan=htv2 & 	set timetable[3].days=123
-	set timetable[4].start=19:50 & set timetable[4].end=21:00 & set timetable[4].chan=thvl1 & 	set timetable[4].days=456
+	set timetable[3].start=19:50 & set timetable[3].end=21:00 & set timetable[3].chan=htv2 & 	set timetable[3].days=no
+	set timetable[4].start=19:50 & set timetable[4].end=21:00 & set timetable[4].chan=thvl1 & 	set timetable[4].days=123456
 	set timetable[5].start=21:30 & set timetable[5].end=23:00 & set timetable[5].chan=vtv3 & 	set timetable[5].days=1234
 
 	set /a leng=6

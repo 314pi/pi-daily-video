@@ -12,7 +12,7 @@ if exist p4j.txt del p4j.txt
 copy NUL p4j.txt
 if %simple% equ 1 goto simple
 ::==============================COMPLEX JOIN
-for %%i in (part*.mp4) do (
+for %%i in (p*.mp4) do (
 :: Sua file goc and if Resolution # 640x360 then change resolution to 640x360 keep video quality
 	"!ffprobe!" -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 %%i >reso.txt
 	set /p reso=<reso.txt
@@ -38,6 +38,6 @@ goto :eof
 ::==============================SIMPLE JOIN PARTS
 :simple
 echo ffconcat version 1.0 > p4j.txt
-(for %%i in (part*.mp4) do @echo file %%i) >> p4j.txt
+(for %%i in (p*.mp4) do @echo file %%i) >> p4j.txt
 "%ffmpeg%" -i p4j.txt -c copy -movflags faststart join_%name% -hide_banner
 ::del p4j.txt

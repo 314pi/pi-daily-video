@@ -1,5 +1,0 @@
-This is a Windows 64 bit program (x64)
-
-(c) horst.schaeffer@gmx.net
-    www.horstmuc.de
-*

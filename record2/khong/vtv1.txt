@@ -1,3 +1,0 @@
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/712b086c42e4452a65ed49db092a36a31528303267/live/_definst_/vtv1-low.m3u8
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/841889d1af15cf2681fbdb48e5fe6ea01528303288/live/_definst_/vtv1-low.m3u8
-http://vtvgo-live-appobj.b5695cde.cdnviet.com/5129d7684f35bc370f91ee445cc079a61528303329/live/_definst_/vtv1-low.m3u8

@@ -1,4 +1,8 @@
-http://s8196.cdn.mytvnet.vn/v5live.m3u8?c=vstv009&q=auto&deviceType=4&userId=27794&deviceId=&type=tv&rkey=09111018t3Xu8qbq&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg11&profiles=high,medium&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn 
-http://27.67.64.6:18080/158.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FsSXKFr1LvmX8%2BbXWOw5bIupZdFazbxj3UK4NljVJi1vszRgL1dkssMBxHrAMYH7f4dQWjYFa3BSwxdQvwea%2BVm 
-http://27.67.80.6:18080/158.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FsSXKFr1LvmX8%2BbXWOw5bIupZdFazbxj3UK4NljVJi1vszRgL1dkssMBxHrAMYH7f4dQWjYFa3BSwxdQvwea%2BVm 
-http://27.67.50.6:18080/158.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FsSXKFr1LvmX8%2BbXWOw5bIupZdFazbxj3UK4NljVJi1vszRgL1dkssMBxHrAMYH7f4dQWjYFa3BSwxdQvwea%2BVm 
+http://123.29.75.162/v4live.m3u8?c=vstv009&q=auto&deviceType=2&userId=1750&deviceId=&type=tv&rkey=null&p=0&zn=net&grantor=1&pkg=pkg0&location=HCM&rbk=123296849 
+https://talk2.vcdn.vn/hls/80cfea82fb9d652a20153f9cb37c4764/165f72164cf/soteoido/index.m3u8 
+http://123.29.128.196/v5live.m3u8?c=vstv274&q=sd&deviceType=&userId=12613&deviceId=&type=tv&rkey=0920201101ISwZvL&p=0&zn=net&ctl=3.30&sl=6&pkg=pkg12&location=&rbk=20316270138&pnode=172.16.10.62&isp=vn 
+http://s8196.cdn.mytvnet.vn/v5live.m3u8?c=vstv274&q=sd&deviceType=&userId=13137&deviceId=&type=tv&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg12&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn&rkey=09201953dQi9JAuR 
+http://s8165.cdn.mytvnet.vn/v5live.m3u8?c=vstv009&q=250k&deviceType=&userId=24766&deviceId=&type=tv&p=0&zn=net&ctl=3.31&sl=6&pkg=pkg11&location=&rbk=123296850&isp=vnpt&pnode=172.16.10.62&isp=vn&rkey=09202007txg99Dge 
+http://27.67.64.6:18080/158.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FssismUrYwIiqP3QFkmgnD52S3pXCVz0MtrPPCdyI7UceS%2FdeQe9t90KMl4kZmqIKFzCUhBAAOBhcywPc9xCuOx 
+http://27.67.80.6:18080/158.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FssismUrYwIiqP3QFkmgnD52S3pXCVz0MtrPPCdyI7UceS%2FdeQe9t90KMl4kZmqIKFzCUhBAAOBhcywPc9xCuOx 
+http://27.67.50.6:18080/158.m3u8?AdaptiveType=HLS&VOD_RequestID=﻿6xoNEwAai%2FXNladSf1uNRqqxk%2FGbOK20lxjsqcbE1%2FssismUrYwIiqP3QFkmgnD52S3pXCVz0MtrPPCdyI7UceS%2FdeQe9t90KMl4kZmqIKFzCUhBAAOBhcywPc9xCuOx 
